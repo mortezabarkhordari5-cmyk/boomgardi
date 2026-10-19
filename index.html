@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ایران‌جا | سامانه جامع بوم‌گردی ایران</title>
+    <!-- فونت وزیرمتن -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f8fafc; color: #1e293b; direction: rtl; }
+        header { background: #0f766e; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+        header p { font-size: 0.95rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+        .search-box { background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 4px rgb(0 0 0 / 0.05); display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .search-box input, .search-box select { flex: 1; min-width: 200px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; outline: none; }
+        .search-box button { background: #0d9488; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .search-box button:hover { background: #0f766e; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-4px); }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #e2e8f0; }
+        .card-content { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
+        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: #0f172a; }
+        .card-location { font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem; }
+        .card-price { font-size: 1.1rem; font-weight: bold; color: #0d9488; margin-top: auto; margin-bottom: 1rem; }
+        .btn-reserve { display: block; width: 100%; text-align: center; background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488; padding: 0.6rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.2s; }
+        .btn-reserve:hover { background: #0d9488; color: white; }
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ایران‌جا 🌲</h1>
+        <p>رزرو اقامتگاه‌های بوم‌گردی و سنتی در سراسر ایران</p>
+    </header>
+
+    <div class="container">
+        <!-- بخش جستجو و فیلتر -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()">
+            <select id="provinceSelect" onchange="filterProperties()">
+                <option value="">همه استان‌ها</option>
+                <option value="گیلان">گیلان</option>
+                <option value="مازندران">مازندران</option>
+                <option value="قزوین">قزوین (الموت)</option>
+                <option value="فارس">فارس</option>
+                <option value="یزد">یزد</option>
+                <option value="اصفهان">اصفهان</option>
+            </select>
+            <button onclick="filterProperties()">جستجو</button>
+        </div>
+
+        <!-- لیست اقامتگاه‌ها -->
+        <div class="grid" id="propertyGrid"></div>
+    </div>
+
+    <script>
+        // داده‌های نمونه (که می‌توان مستقیماً با Supabase یا API جایگزین کرد)
+        const properties = [
+            {
+                id: 1,
+                title: "کلبه چوبی جنگلی الموت",
+                province: "قزوین",
+                location: "قزوین، منطقه الموت",
+                price: "۱,۵۰۰,۰۰۰ تومان / هر شب",
+                image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=500"
+            },
+            {
+                id: 2,
+                title: "اقامتگاه سنتی خانه تاریخی",
+                province: "یزد",
+                location: "یزد، بافت تاریخی",
+                price: "۹۰۰,۰۰۰ تومان / هر شب",
+                image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?w=500"
+            },
+            {
+                id: 3,
+                title: "بوم‌گردی سنتی گیلان",
+                province: "گیلان",
+                location: "گیلان، ماسال",
+                price: "۱,۲۰۰,۰۰۰ تومان / هر شب",
+                image: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=500"
+            }
+        ];
+
+        function renderList(list) {
+            const grid = document.getElementById('propertyGrid');
+            if (list.length === 0) {
+                grid.innerHTML = '<div class="empty-state">موردی مطابق با جستجوی شما یافت نشد.</div>';
+                return;
+            }
+
+            grid.innerHTML = list.map(item => `
+                <div class="card">
+                    <img src="${item.image}" alt="${item.title}" loading="lazy">
+                    <div class="card-content">
+                        <div class="card-title">${item.title}</div>
+                        <div class="card-location">📍 ${item.location}</div>
+                        <div class="card-price">${item.price}</div>
+                        <a href="javascript:void(0)" class="btn-reserve" onclick="reserve(${item.id})">درخواست رزرو</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProperties() {
+            const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
+            const province = document.getElementById('provinceSelect').value;
+
+            const filtered = properties.filter(item => {
+                const matchKeyword = !keyword || item.title.toLowerCase().includes(keyword) || item.location.toLowerCase().includes(keyword);
+                const matchProvince = !province || item.province === province;
+                return matchKeyword && matchProvince;
+            });
+
+            renderList(filtered);
+        }
+
+        function reserve(id) {
+            const selected = properties.find(p => p.id === id);
+            alert(`درخواست رزرو برای: «${selected.title}» ثبت شد.\nبه‌زودی با شما تماس گرفته می‌شود.`);
+        }
+
+        // بارگذاری اولیه
+        renderList(properties);
+    </script>
+
+</body>
+</html>
