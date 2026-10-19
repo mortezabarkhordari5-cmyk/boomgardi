@@ -1,130 +1,268 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ایران‌جا | سامانه جامع بوم‌گردی ایران</title>
-    <!-- فونت وزیرمتن -->
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <style>
-        * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #f8fafc; color: #1e293b; direction: rtl; }
-        header { background: #0f766e; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-        header p { font-size: 0.95rem; opacity: 0.9; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
-        .search-box { background: white; padding: 1rem; border-radius: 12px; box-shadow: 0 2px 4px rgb(0 0 0 / 0.05); display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .search-box input, .search-box select { flex: 1; min-width: 200px; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; outline: none; }
-        .search-box button { background: #0d9488; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        .search-box button:hover { background: #0f766e; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-4px); }
-        .card img { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
-        .card-content { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
-        .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: #0f172a; }
-        .card-location { font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem; }
-        .card-price { font-size: 1.1rem; font-weight: bold; color: #0d9488; margin-top: auto; margin-bottom: 1rem; }
-        .btn-reserve { display: block; width: 100%; text-align: center; background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488; padding: 0.6rem; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.2s; }
-        .btn-reserve:hover { background: #0d9488; color: white; }
-        .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ایران‌جا | سامانه جامع بوم‌گردی ایران</title>
+
+  <!-- فونت وزیرمتن -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+    body { background-color: #f8fafc; color: #1e293b; direction: rtl; }
+    header { background: #0f766e; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+    header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
+    header p { font-size: 0.95rem; opacity: 0.9; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+    .search-box {
+      background: white; padding: 1rem; border-radius: 12px;
+      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+      display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box input, .search-box select {
+      flex: 1; min-width: 200px;
+      padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;
+      font-size: 1rem; outline: none;
+    }
+
+    .search-box button {
+      background: #0d9488; color: white; border: none; padding: 0.75rem 1.5rem;
+      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .search-box button:hover { background: #0f766e; }
+
+    .statusbar{
+      margin-bottom: 1.25rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      align-items: center;
+      color:#475569;
+      font-size: .95rem;
+    }
+    .badge{
+      background:#e2e8f0;
+      padding:.35rem .6rem;
+      border-radius: 999px;
+    }
+    .badge.ok{ background:#dcfce7; color:#166534; }
+    .badge.err{ background:#fee2e2; color:#991b1b; }
+    .badge.load{ background:#e0f2fe; color:#075985; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+
+    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
+    .card:hover { transform: translateY(-4px); }
+
+    .card img { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
+    .card-content { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
+
+    .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: #0f172a; }
+    .card-location { font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem; }
+    .card-price { font-size: 1.1rem; font-weight: bold; color: #0d9488; margin-top: auto; margin-bottom: 1rem; }
+
+    .btn-reserve {
+      display: block; width: 100%; text-align: center;
+      background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488;
+      padding: 0.6rem; border-radius: 8px; text-decoration: none;
+      font-weight: bold; transition: all 0.2s;
+    }
+    .btn-reserve:hover { background: #0d9488; color: white; }
+
+    .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
+
+    .note{
+      margin-top: 1rem;
+      color:#64748b;
+      font-size:.9rem;
+      line-height: 1.8;
+    }
+    .note code{ background:#f1f5f9; padding:.15rem .35rem; border-radius:6px; }
+  </style>
 </head>
+
 <body>
+  <header>
+    <h1>ایران‌جا 🌲</h1>
+    <p>رزرو اقامتگاه‌های بوم‌گردی و سنتی در سراسر ایران</p>
+  </header>
 
-    <header>
-        <h1>ایران‌جا 🌲</h1>
-        <p>رزرو اقامتگاه‌های بوم‌گردی و سنتی در سراسر ایران</p>
-    </header>
-
-    <div class="container">
-        <!-- بخش جستجو و فیلتر -->
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()">
-            <select id="provinceSelect" onchange="filterProperties()">
-                <option value="">همه استان‌ها</option>
-                <option value="گیلان">گیلان</option>
-                <option value="مازندران">مازندران</option>
-                <option value="قزوین">قزوین (الموت)</option>
-                <option value="فارس">فارس</option>
-                <option value="یزد">یزد</option>
-                <option value="اصفهان">اصفهان</option>
-            </select>
-            <button onclick="filterProperties()">جستجو</button>
-        </div>
-
-        <!-- لیست اقامتگاه‌ها -->
-        <div class="grid" id="propertyGrid"></div>
+  <div class="container">
+    <!-- بخش جستجو و فیلتر -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()" />
+      <select id="provinceSelect" onchange="filterProperties()">
+        <option value="">همه استان‌ها</option>
+        <!-- استان‌ها بعداً به‌صورت خودکار هم پر می‌شوند -->
+      </select>
+      <button onclick="filterProperties()">جستجو</button>
+      <button onclick="resetFilters()" style="background:#334155">پاک‌کردن</button>
     </div>
 
-    <script>
-        const properties = [
-            {
-                id: 1,
-                title: "کلبه چوبی جنگلی الموت",
-                province: "قزوین",
-                location: "قزوین، منطقه الموت",
-                price: "۱,۵۰۰,۰۰۰ تومان / هر شب",
-                image: "https://picsum.photos/seed/alamut/500/300"
-            },
-            {
-                id: 2,
-                title: "اقامتگاه سنتی خانه تاریخی",
-                province: "یزد",
-                location: "یزد، بافت تاریخی",
-                price: "۹۰۰,۰۰۰ تومان / هر شب",
-                image: "https://picsum.photos/seed/yazd/500/300"
-            },
-            {
-                id: 3,
-                title: "بوم‌گردی سنتی گیلان",
-                province: "گیلان",
-                location: "گیلان، ماسال",
-                price: "۱,۲۰۰,۰۰۰ تومان / هر شب",
-                image: "https://picsum.photos/seed/gilan/500/300"
-            }
-        ];
+    <!-- وضعیت اتصال / تعداد نتایج -->
+    <div class="statusbar">
+      <span id="statusBadge" class="badge load">در حال اتصال به دیتابیس...</span>
+      <span class="badge" id="countBadge">۰ مورد</span>
+    </div>
 
-        function renderList(list) {
-            const grid = document.getElementById('propertyGrid');
-            if (list.length === 0) {
-                grid.innerHTML = '<div class="empty-state">موردی مطابق با جستجوی شما یافت نشد.</div>';
-                return;
-            }
+    <!-- لیست اقامتگاه‌ها -->
+    <div class="grid" id="propertyGrid"></div>
 
-            grid.innerHTML = list.map(item => `
-                <div class="card">
-                    <img src="${item.image}" alt="${item.title}" loading="lazy">
-                    <div class="card-content">
-                        <div class="card-title">${item.title}</div>
-                        <div class="card-location">📍 ${item.location}</div>
-                        <div class="card-price">${item.price}</div>
-                        <a href="javascript:void(0)" class="btn-reserve" onclick="reserve(${item.id})">درخواست رزرو</a>
-                    </div>
-                </div>
-            `).join('');
-        }
+    <div class="note">
+      اگر چیزی نمایش داده نشد، معمولاً یکی از این‌هاست:
+      <br/>۱) کلید را اشتباه گذاشتی (باید <b>publishable/anon</b> باشد نه <code>secret</code>)
+      <br/>۲) RLS روشن است و policy برای SELECT نداری
+      <br/>۳) نام ستون‌ها با کد یکی نیست (مثلاً <code>image</code> یا <code>price</code>)
+    </div>
+  </div>
 
-        function filterProperties() {
-            const keyword = document.getElementById('searchInput').value.trim().toLowerCase();
-            const province = document.getElementById('provinceSelect').value;
+  <!-- Supabase JS v2 -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-            const filtered = properties.filter(item => {
-                const matchKeyword = !keyword || item.title.toLowerCase().includes(keyword) || item.location.toLowerCase().includes(keyword);
-                const matchProvince = !province || item.province === province;
-                return matchKeyword && matchProvince;
-            });
+    // 1) این دو مقدار را تنظیم کن
+    const SUPABASE_URL = "https://btuzkqlbvplevvgkuzdb.supabase.co";
+    const SUPABASE_ANON_KEY = "PASTE_YOUR_PUBLISHABLE_ANON_KEY_HERE"; // <-- اینجا
 
-            renderList(filtered);
-        }
+    // 2) اتصال
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        function reserve(id) {
-            const selected = properties.find(p => p.id === id);
-            alert(`درخواست رزرو برای: «${selected.title}» ثبت شد.\nبه‌زودی با شما تماس گرفته می‌شود.`);
-        }
+    // 3) جدول شما طبق اسکرین‌شات
+    const TABLE_NAME = "lodging";
 
-        renderList(properties);
-    </script>
+    // داده‌های اصلی که از دیتابیس می‌گیریم
+    let properties = [];
 
+    const els = {
+      grid: document.getElementById("propertyGrid"),
+      searchInput: document.getElementById("searchInput"),
+      provinceSelect: document.getElementById("provinceSelect"),
+      statusBadge: document.getElementById("statusBadge"),
+      countBadge: document.getElementById("countBadge"),
+    };
+
+    function setStatus(type, text){
+      els.statusBadge.className = "badge " + (type === "ok" ? "ok" : type === "err" ? "err" : "load");
+      els.statusBadge.textContent = text;
+    }
+
+    function normalizeStr(s){
+      return (s ?? "").toString().trim().toLowerCase();
+    }
+
+    function safeText(s, fallback=""){
+      const t = (s ?? "").toString().trim();
+      return t.length ? t : fallback;
+    }
+
+    function safeImage(url){
+      const u = (url ?? "").toString().trim();
+      return u.length ? u : "https://picsum.photos/seed/iranja/600/400";
+    }
+
+    function formatPrice(value){
+      // اگر در دیتابیس price عدد بود یا متن، هر دو را پشتیبانی می‌کنیم
+      if (value === null || value === undefined) return "قیمت نامشخص";
+      const s = value.toString().trim();
+      if (!s) return "قیمت نامشخص";
+      return s.includes("تومان") || s.includes("ریال") ? s : (s + " تومان / هر شب");
+    }
+
+    function renderList(list) {
+      els.countBadge.textContent = `${list.length} مورد`;
+
+      if (list.length === 0) {
+        els.grid.innerHTML = '<div class="empty-state">موردی مطابق با جستجوی شما یافت نشد.</div>';
+        return;
+      }
+
+      els.grid.innerHTML = list.map(item => `
+        <div class="card">
+          <img src="${safeImage(item.image)}" alt="${safeText(item.title, "اقامتگاه")}" loading="lazy">
+          <div class="card-content">
+            <div class="card-title">${safeText(item.title, "بدون عنوان")}</div>
+            <div class="card-location">📍 ${safeText(item.location, safeText(item.province, "نامشخص"))}</div>
+            <div class="card-price">${formatPrice(item.price)}</div>
+            <a href="javascript:void(0)" class="btn-reserve" onclick="reserve(${item.id})">درخواست رزرو</a>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    window.filterProperties = function filterProperties() {
+      const keyword = normalizeStr(els.searchInput.value);
+      const province = (els.provinceSelect.value ?? "").toString().trim();
+
+      const filtered = properties.filter(item => {
+        const title = normalizeStr(item.title);
+        const location = normalizeStr(item.location);
+        const prov = (item.province ?? "").toString().trim();
+
+        const matchKeyword = !keyword || title.includes(keyword) || location.includes(keyword) || prov.toLowerCase().includes(keyword);
+        const matchProvince = !province || prov === province;
+
+        return matchKeyword && matchProvince;
+      });
+
+      renderList(filtered);
+    };
+
+    window.resetFilters = function resetFilters(){
+      els.searchInput.value = "";
+      els.provinceSelect.value = "";
+      renderList(properties);
+    }
+
+    window.reserve = function reserve(id) {
+      const selected = properties.find(p => p.id === id);
+      const name = selected ? safeText(selected.title, "این اقامتگاه") : "این اقامتگاه";
+      alert(`درخواست رزرو برای: «${name}» ثبت شد.\nبه‌زودی با شما تماس گرفته می‌شود.`);
+    };
+
+    function fillProvinceOptions(list){
+      // گزینه‌های ثابت را نگه می‌داریم، بعد بقیه را اضافه می‌کنیم
+      const existing = new Set(Array.from(els.provinceSelect.options).map(o => o.value).filter(Boolean));
+      const provinces = Array.from(new Set(list.map(x => (x.province ?? "").toString().trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"fa"));
+
+      provinces.forEach(p => {
+        if (existing.has(p)) return;
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.textContent = p;
+        els.provinceSelect.appendChild(opt);
+      });
+    }
+
+    async function loadFromSupabase(){
+      setStatus("load", "در حال دریافت اطلاعات از Supabase...");
+
+      const { data, error } = await supabase
+        .from(TABLE_NAME)
+        .select("id, title, province, location, price, image")
+        .order("id", { ascending: true });
+
+      if (error){
+        console.error(error);
+        setStatus("err", "خطا در دریافت اطلاعات (کلید/RLS/نام ستون‌ها را چک کن)");
+        properties = [];
+        renderList([]);
+        return;
+      }
+
+      properties = Array.isArray(data) ? data : [];
+      fillProvinceOptions(properties);
+      setStatus("ok", "اتصال برقرار است");
+      renderList(properties);
+    }
+
+    // شروع
+    loadFromSupabase();
+  </script>
 </body>
 </html>
