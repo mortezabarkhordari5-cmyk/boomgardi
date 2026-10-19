@@ -76,14 +76,6 @@
     .btn-reserve:hover { background: #0d9488; color: white; }
 
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
-
-    .note{
-      margin-top: 1rem;
-      color:#64748b;
-      font-size:.9rem;
-      line-height: 1.8;
-    }
-    .note code{ background:#f1f5f9; padding:.15rem .35rem; border-radius:6px; }
   </style>
 </head>
 
@@ -99,13 +91,12 @@
       <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()" />
       <select id="provinceSelect" onchange="filterProperties()">
         <option value="">همه استان‌ها</option>
-        <!-- استان‌ها بعداً به‌صورت خودکار هم پر می‌شوند -->
       </select>
       <button onclick="filterProperties()">جستجو</button>
       <button onclick="resetFilters()" style="background:#334155">پاک‌کردن</button>
     </div>
 
-    <!-- وضعیت اتصال / تعداد نتایج -->
+    <!-- وضعیت اتصال -->
     <div class="statusbar">
       <span id="statusBadge" class="badge load">در حال اتصال به دیتابیس...</span>
       <span class="badge" id="countBadge">۰ مورد</span>
@@ -113,30 +104,18 @@
 
     <!-- لیست اقامتگاه‌ها -->
     <div class="grid" id="propertyGrid"></div>
-
-    <div class="note">
-      اگر چیزی نمایش داده نشد، معمولاً یکی از این‌هاست:
-      <br/>۱) کلید را اشتباه گذاشتی (باید <b>publishable/anon</b> باشد نه <code>secret</code>)
-      <br/>۲) RLS روشن است و policy برای SELECT نداری
-      <br/>۳) نام ستون‌ها با کد یکی نیست (مثلاً <code>image</code> یا <code>price</code>)
-    </div>
   </div>
 
   <!-- Supabase JS v2 -->
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-    // 1) این دو مقدار را تنظیم کن
     const SUPABASE_URL = "https://btuzkqlbvplevvgkuzdb.supabase.co";
-    const SUPABASE_ANON_KEY = "PASTE_YOUR_PUBLISHABLE_ANON_KEY_HERE"; // <-- اینجا
+    const SUPABASE_ANON_KEY = "sb_publishable_pzLdBy3V1aXNjdmFsb3JAZ21haWwuY29t";
 
-    // 2) اتصال
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // 3) جدول شما طبق اسکرین‌شات
     const TABLE_NAME = "lodging";
 
-    // داده‌های اصلی که از دیتابیس می‌گیریم
     let properties = [];
 
     const els = {
@@ -167,7 +146,6 @@
     }
 
     function formatPrice(value){
-      // اگر در دیتابیس price عدد بود یا متن، هر دو را پشتیبانی می‌کنیم
       if (value === null || value === undefined) return "قیمت نامشخص";
       const s = value.toString().trim();
       if (!s) return "قیمت نامشخص";
@@ -226,7 +204,6 @@
     };
 
     function fillProvinceOptions(list){
-      // گزینه‌های ثابت را نگه می‌داریم، بعد بقیه را اضافه می‌کنیم
       const existing = new Set(Array.from(els.provinceSelect.options).map(o => o.value).filter(Boolean));
       const provinces = Array.from(new Set(list.map(x => (x.province ?? "").toString().trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"fa"));
 
@@ -249,7 +226,7 @@
 
       if (error){
         console.error(error);
-        setStatus("err", "خطا در دریافت اطلاعات (کلید/RLS/نام ستون‌ها را چک کن)");
+        setStatus("err", "خطا در دریافت اطلاعات (احتمالاً RLS جدول فعال است)");
         properties = [];
         renderList([]);
         return;
@@ -257,11 +234,10 @@
 
       properties = Array.isArray(data) ? data : [];
       fillProvinceOptions(properties);
-      setStatus("ok", "اتصال برقرار است");
+      setStatus("ok", "اتصال به دیتابیس برقرار است");
       renderList(properties);
     }
 
-    // شروع
     loadFromSupabase();
   </script>
 </body>
