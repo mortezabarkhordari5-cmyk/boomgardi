@@ -33,7 +33,9 @@
     .btn-success { background: #16a34a; }
     .btn-success:hover { background: #15803d; }
 
-    .listing-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #fff; }
+    .listing-item { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .listing-img { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
+    .listing-content { padding: 15px; }
     .listing-item h3 { color: #0f766e; font-size: 1.1rem; margin-bottom: 5px; }
     .listing-item p { font-size: 0.9rem; color: #475569; margin-bottom: 8px; }
 
@@ -65,6 +67,12 @@
     <!-- بخش جستجو و لیست اقامتگاه‌ها -->
     <div class="card">
       <h2>اقامتگاه‌های فعال</h2>
+      
+      <!-- فیلتر جستجو -->
+      <div class="form-group" style="margin-bottom: 20px;">
+        <input type="text" id="searchInput" class="form-control" placeholder="🔍 جستجو بر اساس نام اقامتگاه، شهر یا منطقه (مثلاً: الموت، ماسال)..." oninput="renderListings()">
+      </div>
+
       <div id="listingsContainer"></div>
     </div>
 
@@ -83,6 +91,10 @@
         <div class="form-group">
           <label>قیمت هر شب (تومان)</label>
           <input type="number" id="hostPrice" class="form-control" required placeholder="مثلاً: 950000">
+        </div>
+        <div class="form-group">
+          <label>تصویر اقامتگاه</label>
+          <input type="file" id="hostImage" class="form-control" accept="image/*" required>
         </div>
         <div class="form-group">
           <label>توضیحات و امکانات</label>
@@ -130,8 +142,8 @@
 
   <script>
     let defaultListings = [
-      { id: 1, title: 'اقامتگاه سنتی عمو رحمان', location: 'الموت - قزوین', price: 950000, desc: 'دارای بافت سنتی، چشم‌انداز عالی و صبحانه محلی' },
-      { id: 2, title: 'کلبه جنگلی کوهستان', location: 'ماسال - گیلان', price: 1400000, desc: 'محیطی دنج و آرام میان درختان سرسبز' }
+      { id: 1, title: 'اقامتگاه سنتی عمو رحمان', location: 'الموت - قزوین', price: 950000, image: 'https://images.unsplash.com/photo-1587061949409-02df41d5e562?auto=format&fit=crop&w=600&q=80', desc: 'دارای بافت سنتی، چشم‌انداز عالی و صبحانه محلی' },
+      { id: 2, title: 'کلبه جنگلی کوهستان', location: 'ماسال - گیلان', price: 1400000, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80', desc: 'محیطی دنج و آرام میان درختان سرسبز' }
     ];
 
     function getListings() {
@@ -146,22 +158,32 @@
 
     function renderListings() {
       let listings = getListings();
+      let searchText = document.getElementById('searchInput').value.toLowerCase().trim();
       let container = document.getElementById('listingsContainer');
       
-      if (listings.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#64748b;">هنوز اقامتگاهی ثبت نشده است.</p>';
+      let filteredListings = listings.filter(item => {
+        return item.title.toLowerCase().includes(searchText) || 
+               item.location.toLowerCase().includes(searchText) || 
+               item.desc.toLowerCase().includes(searchText);
+      });
+
+      if (filteredListings.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;">موردی با این مشخصات یافت نشد.</p>';
         return;
       }
 
       let html = '';
-      listings.forEach(item => {
+      filteredListings.forEach(item => {
         html += `
           <div class="listing-item">
-            <h3>${item.title}</h3>
-            <p>📍 منطقه: ${item.location}</p>
-            <p>📝 توضیحات: ${item.desc}</p>
-            <p><span class="badge">💰 ${Number(item.price).toLocaleString()} تومان / هر شب</span></p>
-            <button class="btn" style="margin-top: 10px;" onclick="openBooking('${item.title}', ${item.price})">رزرو آنلاین و پرداخت</button>
+            <img src="${item.image}" alt="${item.title}" class="listing-img">
+            <div class="listing-content">
+              <h3>${item.title}</h3>
+              <p>📍 منطقه: ${item.location}</p>
+              <p>📝 توضیحات: ${item.desc}</p>
+              <p><span class="badge">💰 ${Number(item.price).toLocaleString()} تومان / هر شب</span></p>
+              <button class="btn" style="margin-top: 10px;" onclick="openBooking('${item.title}', ${item.price})">رزرو آنلاین و پرداخت</button>
+            </div>
           </div>
         `;
       });
@@ -194,26 +216,37 @@
       renderAdminList();
     }
 
+    // ثبت اقامتگاه جدید به همراه بارگذاری تصویر
     document.getElementById('hostForm').addEventListener('submit', function(e) {
       e.preventDefault();
       let title = document.getElementById('hostTitle').value;
       let location = document.getElementById('hostLocation').value;
       let price = document.getElementById('hostPrice').value;
       let desc = document.getElementById('hostDesc').value;
+      let imageFile = document.getElementById('hostImage').files[0];
 
-      let listings = getListings();
-      let newItem = {
-        id: Date.now(),
-        title: title,
-        location: location,
-        price: Number(price),
-        desc: desc
-      };
+      if (imageFile) {
+        let reader = new FileReader();
+        reader.onload = function(event) {
+          let imageUrl = event.target.result;
+          
+          let listings = getListings();
+          let newItem = {
+            id: Date.now(),
+            title: title,
+            location: location,
+            price: Number(price),
+            image: imageUrl,
+            desc: desc
+          };
 
-      listings.push(newItem);
-      saveListings(listings);
-      alert('اقامتگاه شما با موفقیت ثبت شد و در سایت قرار گرفت!');
-      document.getElementById('hostForm').reset();
+          listings.push(newItem);
+          saveListings(listings);
+          alert('اقامتگاه شما با تصویر مربوطه با موفقیت ثبت شد!');
+          document.getElementById('hostForm').reset();
+        };
+        reader.readAsDataURL(imageFile);
+      }
     });
 
     function deleteListing(id) {
