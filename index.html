@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ایران‌جا | سامانه جامع بوم‌گردی ایران</title>
+  <title>ایران‌جا | سامانه جامع بوم‌گردی و رزرو اقامتگاه</title>
 
   <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
@@ -17,6 +17,17 @@
 
     .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
 
+    .top-actions {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;
+    }
+
+    .btn-host {
+      background: #0284c7; color: white; border: none; padding: 0.75rem 1.25rem;
+      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-host:hover { background: #0369a1; }
+
     .search-box {
       background: white; padding: 1rem; border-radius: 12px;
       box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
@@ -25,7 +36,7 @@
     }
 
     .search-box input, .search-box select {
-      flex: 1; min-width: 200px;
+      flex: 1; min-width: 180px;
       padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;
       font-size: 1rem; outline: none;
     }
@@ -37,19 +48,12 @@
     }
     .search-box button:hover { background: #0f766e; }
 
-    .statusbar{
-      margin-bottom: 1.25rem;
-      display: flex;
-      gap: .75rem;
-      flex-wrap: wrap;
-      align-items: center;
-      color:#475569;
-      font-size: .95rem;
+    .statusbar {
+      margin-bottom: 1.25rem; display: flex; gap: .75rem; flex-wrap: wrap;
+      align-items: center; color: #475569; font-size: .95rem;
     }
-    .badge{
-      background:#dcfce7; color:#166534;
-      padding:.35rem .6rem;
-      border-radius: 999px;
+    .badge {
+      background: #dcfce7; color: #166534; padding: .35rem .7rem; border-radius: 999px; font-weight: 500;
     }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
@@ -68,9 +72,27 @@
       display: block; width: 100%; text-align: center;
       background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488;
       padding: 0.6rem; border-radius: 8px; text-decoration: none;
-      font-weight: bold; transition: all 0.2s;
+      font-weight: bold; transition: all 0.2s; cursor: pointer;
     }
     .btn-reserve:hover { background: #0d9488; color: white; }
+
+    /* Modal Form Styling */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 1rem; z-index: 1000;
+    }
+    .modal-content {
+      background: white; padding: 2rem; border-radius: 16px; width: 100%; max-width: 500px;
+      box-shadow: 0 4px 20px rgb(0 0 0 / 0.15); max-height: 90vh; overflow-y: auto;
+    }
+    .modal-content h3 { margin-bottom: 1rem; color: #0f766e; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; font-weight: 500; }
+    .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; outline: none; }
+    .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .modal-actions button { flex: 1; padding: 0.75rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    .btn-submit { background: #0d9488; color: white; }
+    .btn-cancel { background: #e2e8f0; color: #334155; }
 
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
   </style>
@@ -79,10 +101,20 @@
 <body>
   <header>
     <h1>ایران‌جا 🌲</h1>
-    <p>رزرو اقامتگاه‌های بوم‌گردی و سنتی در سراسر ایران</p>
+    <p>سامانه جامع رزرو بوم‌گردی و ثبت اقامتگاه</p>
   </header>
 
   <div class="container">
+    
+    <!-- دکمه ثبت اقامتگاه برای صاحب‌کار -->
+    <div class="top-actions">
+      <div class="statusbar" style="margin: 0;">
+        <span class="badge">وضعیت: فعال و پیشرفته</span>
+        <span class="badge" id="countBadge" style="background:#e2e8f0; color:#334155;">۰ مورد</span>
+      </div>
+      <button class="btn-host" onclick="openModal()">➕ ثبت اقامتگاه جدید (مخصوص میزبانان)</button>
+    </div>
+
     <!-- بخش جستجو و فیلتر -->
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()" />
@@ -93,19 +125,46 @@
       <button onclick="resetFilters()" style="background:#334155">پاک‌کردن</button>
     </div>
 
-    <!-- وضعیت اتصال -->
-    <div class="statusbar">
-      <span class="badge">وضعیت: آماده و فعال (آفلاین)</span>
-      <span class="badge" id="countBadge" style="background:#e2e8f0; color:#334155;">۰ مورد</span>
-    </div>
-
     <!-- لیست اقامتگاه‌ها -->
     <div class="grid" id="propertyGrid"></div>
   </div>
 
+  <!-- مودال (فرم) ثبت اقامتگاه توسط صاحب‌کار -->
+  <div class="modal" id="hostModal">
+    <div class="modal-content">
+      <h3>ثبت اقامتگاه جدید</h3>
+      <form id="hostForm" onsubmit="saveProperty(event)">
+        <div class="form-group">
+          <label>نام اقامتگاه:</label>
+          <input type="text" id="propTitle" required placeholder="مثلاً: بوم‌گردی باران" />
+        </div>
+        <div class="form-group">
+          <label>استان:</label>
+          <input type="text" id="propProvince" required placeholder="مثلاً: مازندران" />
+        </div>
+        <div class="form-group">
+          <label>شهر / منطقه:</label>
+          <input type="text" id="propLocation" required placeholder="مثلاً: رامسر، جواهرده" />
+        </div>
+        <div class="form-group">
+          <label>قیمت هر شب:</label>
+          <input type="text" id="propPrice" required placeholder="مثلاً: ۱,۴۰۰,۰۰۰ تومان" />
+        </div>
+        <div class="form-group">
+          <label>لینک عکس (آدرس اینترنتی تصویر):</label>
+          <input type="url" id="propImage" required placeholder="https://..." />
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" onclick="closeModal()">انصراف</button>
+          <button type="submit" class="btn-submit">ثبت و انتشار</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    // اطلاعات اقامتگاه‌ها مستقیماً داخل خود سایت (بدون نیاز به سوپابیس)
-    const properties = [
+    // اطلاعات اولیه + اطلاعات ذخیره شده در مرورگر
+    const defaultProperties = [
       {
         id: 1,
         title: "اقامتگاه بوم‌گردی ناردشت",
@@ -132,7 +191,7 @@
       },
       {
         id: 4,
-        title: "اقامتگاه بوم‌گردیه آتشونی",
+        title: "اقامتگاه بوم‌گردی آتشونی",
         province: "خراسان جنوبی",
         location: "روستای گرمه، طبس",
         price: "۸۰۰,۰۰۰ تومان / هر شب",
@@ -140,11 +199,15 @@
       }
     ];
 
+    // دریافت اطلاعات از حافظه محلی یا پیش‌فرض
+    let properties = JSON.parse(localStorage.getItem("iranja_properties")) || defaultProperties;
+
     const els = {
       grid: document.getElementById("propertyGrid"),
       searchInput: document.getElementById("searchInput"),
       provinceSelect: document.getElementById("provinceSelect"),
       countBadge: document.getElementById("countBadge"),
+      modal: document.getElementById("hostModal")
     };
 
     function normalizeStr(s){
@@ -164,7 +227,7 @@
           <img src="${item.image}" alt="${item.title}" loading="lazy">
           <div class="card-content">
             <div class="card-title">${item.title}</div>
-            <div class="card-location">📍 ${item.location}</div>
+            <div class="card-location">📍 ${item.location} (${item.province})</div>
             <div class="card-price">${item.price}</div>
             <a href="javascript:void(0)" class="btn-reserve" onclick="reserve(${item.id})">درخواست رزرو</a>
           </div>
@@ -199,17 +262,45 @@
     function reserve(id) {
       const selected = properties.find(p => p.id === id);
       const name = selected ? selected.title : "این اقامتگاه";
-      alert(`درخواست رزرو برای: «${name}» ثبت شد.\nبه‌زودی با شما تماس گرفته می‌شود.`);
+      alert(`درخواست رزرو برای: «${name}» ثبت شد.\nبه‌زودی برای هماهنگی پرداخت با شما تماس خواهیم گرفت.`);
+    }
+
+    function openModal() { els.modal.style.display = "flex"; }
+    function closeModal() { els.modal.style.display = "none"; }
+
+    function saveProperty(e) {
+      e.preventDefault();
+      const newProp = {
+        id: Date.now(),
+        title: document.getElementById("propTitle").value,
+        province: document.getElementById("propProvince").value,
+        location: document.getElementById("propLocation").value,
+        price: document.getElementById("propPrice").value + " / هر شب",
+        image: document.getElementById("propImage").value
+      };
+
+      properties.unshift(newProp);
+      localStorage.setItem("iranja_properties", JSON.stringify(properties));
+      
+      closeModal();
+      document.getElementById("hostForm").reset();
+      fillProvinceOptions();
+      renderList(properties);
+      alert("اقامتگاه شما با موفقیت ثبت و روی سایت منتشر شد!");
     }
 
     function fillProvinceOptions(){
+      const currentVal = els.provinceSelect.value;
       const provinces = Array.from(new Set(properties.map(x => x.province))).sort((a,b)=>a.localeCompare(b,"fa"));
+      
+      els.provinceSelect.innerHTML = '<option value="">همه استان‌ها</option>';
       provinces.forEach(p => {
         const opt = document.createElement("option");
         opt.value = p;
         opt.textContent = p;
         els.provinceSelect.appendChild(opt);
       });
+      els.provinceSelect.value = currentVal;
     }
 
     // راه‌اندازی اولیه
