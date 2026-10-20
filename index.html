@@ -10,425 +10,234 @@
 
   <style>
     * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #f8fafc; color: #1e293b; direction: rtl; }
-    header { background: #0f766e; color: white; padding: 1.5rem; text-align: center; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-    header h1 { font-size: 1.8rem; margin-bottom: 0.3rem; }
-    header p { font-size: 0.95rem; opacity: 0.9; }
+    body { background-color: #f8fafc; color: #1e293b; direction: rtl; line-height: 1.6; }
+    header { background: #0f766e; color: white; padding: 20px 15px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    header h1 { font-size: 1.5rem; margin-bottom: 5px; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
 
-    .container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
 
-    .top-actions {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;
-    }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .card h2 { font-size: 1.2rem; color: #0f766e; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
 
-    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
+    .form-control { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
+    .form-control:focus { outline: none; border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15,118,110,0.1); }
 
-    .btn-host {
-      background: #0284c7; color: white; border: none; padding: 0.75rem 1.25rem;
-      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
-    }
-    .btn-host:hover { background: #0369a1; }
+    .btn { display: inline-block; width: 100%; padding: 12px; background: #0f766e; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; transition: background 0.2s; }
+    .btn:hover { background: #115e59; }
+    .btn-danger { background: #dc2626; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-secondary { background: #475569; margin-top: 10px; }
 
-    .btn-admin {
-      background: #475569; color: white; border: none; padding: 0.75rem 1.25rem;
-      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
-    }
-    .btn-admin:hover { background: #334155; }
+    .listing-item { border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 15px; background: #fff; }
+    .listing-item h3 { color: #0f766e; font-size: 1.1rem; margin-bottom: 5px; }
+    .listing-item p { font-size: 0.9rem; color: #475569; margin-bottom: 8px; }
 
-    .search-box {
-      background: white; padding: 1rem; border-radius: 12px;
-      box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
-      display: flex; gap: 1rem; margin-bottom: 1.25rem; flex-wrap: wrap;
-      align-items: center;
-    }
+    .badge { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 
-    .search-box input, .search-box select {
-      flex: 1; min-width: 180px;
-      padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px;
-      font-size: 1rem; outline: none;
-    }
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .modal-content { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; text-align: center; }
+    .modal-content h3 { color: #0f766e; margin-bottom: 15px; }
+    .modal-content p { font-size: 0.95rem; margin-bottom: 15px; text-align: right; }
 
-    .search-box button {
-      background: #0d9488; color: white; border: none; padding: 0.75rem 1.5rem;
-      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
-      white-space: nowrap;
-    }
-    .search-box button:hover { background: #0f766e; }
-
-    .statusbar {
-      margin-bottom: 1.25rem; display: flex; gap: .75rem; flex-wrap: wrap;
-      align-items: center; color: #475569; font-size: .95rem;
-    }
-    .badge {
-      background: #dcfce7; color: #166534; padding: .35rem .7rem; border-radius: 999px; font-weight: 500;
-    }
-
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-
-    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; position: relative; }
-    .card:hover { transform: translateY(-4px); }
-
-    .card img { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
-    .card-content { padding: 1.2rem; display: flex; flex-direction: column; flex: 1; }
-
-    .card-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: #0f172a; }
-    .card-location { font-size: 0.85rem; color: #64748b; margin-bottom: 0.8rem; }
-    .card-price { font-size: 1.1rem; font-weight: bold; color: #0d9488; margin-top: auto; margin-bottom: 1rem; }
-
-    .btn-reserve {
-      display: block; width: 100%; text-align: center;
-      background: #f0fdfa; color: #0d9488; border: 1px solid #0d9488;
-      padding: 0.6rem; border-radius: 8px; text-decoration: none;
-      font-weight: bold; transition: all 0.2s; cursor: pointer;
-    }
-    .btn-reserve:hover { background: #0d9488; color: white; }
-
-    /* Modal Form Styling */
-    .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5); justify-content: center; align-items: center; padding: 1rem; z-index: 1000;
-    }
-    .modal-content {
-      background: white; padding: 2rem; border-radius: 16px; width: 100%; max-width: 500px;
-      box-shadow: 0 4px 20px rgb(0 0 0 / 0.15); max-height: 90vh; overflow-y: auto;
-    }
-    .modal-content h3 { margin-bottom: 1rem; color: #0f766e; }
-    .form-group { margin-bottom: 1rem; }
-    .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; font-weight: 500; }
-    .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; outline: none; }
-    .modal-actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
-    .modal-actions button { flex: 1; padding: 0.75rem; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-    .btn-submit { background: #0d9488; color: white; }
-    .btn-cancel { background: #e2e8f0; color: #334155; }
-
-    .admin-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem; gap: 0.5rem;
-    }
-    .btn-delete-prop {
-      background: #fee2e2; color: #991b1b; border: none; padding: 0.4rem 0.8rem;
-      border-radius: 6px; cursor: pointer; font-weight: bold; white-space: nowrap;
-    }
-    .btn-delete-prop:hover { background: #fecaca; }
-
-    .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
+    .admin-bar { background: #fef3c7; border: 1px solid #f59e0b; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #92400e; }
   </style>
 </head>
-
 <body>
+
   <header>
-    <h1>ایران‌جا 🌲</h1>
-    <p>سامانه جامع رزرو بوم‌گردی و درگاه پرداخت آنلاین پلتفرم</p>
+    <h1>ایران‌جا</h1>
+    <p>سامانه جامع بوم‌گردی و رزرو اقامتگاه</p>
   </header>
 
   <div class="container">
-    
-    <div class="top-actions">
-      <div class="statusbar" style="margin: 0;">
-        <span class="badge">وضعیت: پلتفرم جامع آنلاین با درگاه اختصاصی</span>
-        <span class="badge" id="countBadge" style="background:#e2e8f0; color:#334155;">۰ مورد</span>
-      </div>
-      <div class="btn-group">
-        <button class="btn-admin" onclick="openAdminModal()">⚙️ مدیریت اقامتگاه‌ها</button>
-        <button class="btn-host" onclick="openHostModal()">➕ ثبت اقامتگاه جدید</button>
+
+    <!-- نوار مدیریت -->
+    <div class="admin-bar">
+      مدیر محترم پلتفرم: آقای برخورداری (تلفن پشتیبانی: 09371880982)
+    </div>
+
+    <!-- بخش جستجو و لیست اقامتگاه‌ها -->
+    <div class="card">
+      <h2>اقامتگاه‌های فعال</h2>
+      <div id="listingsContainer">
+        <!-- اقامتگاه‌ها به صورت پویا اینجا بارگذاری می‌شوند -->
       </div>
     </div>
 
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="جستجوی شهر یا نام اقامتگاه..." oninput="filterProperties()" />
-      <select id="provinceSelect" onchange="filterProperties()">
-        <option value="">همه استان‌ها</option>
-      </select>
-      <button onclick="filterProperties()">جستجو</button>
-      <button onclick="resetFilters()" style="background:#334155">پاک‌کردن</button>
-    </div>
-
-    <div class="grid" id="propertyGrid"></div>
-  </div>
-
-  <!-- مودال رزرو و پرداخت آنلاین -->
-  <div class="modal" id="reserveModal">
-    <div class="modal-content">
-      <h3 id="reserveModalTitle">رزرو اقامتگاه</h3>
-      <form id="reserveForm" onsubmit="processPayment(event)">
-        <input type="hidden" id="reservePropId" />
+    <!-- فرم ثبت اقامتگاه توسط میزبان -->
+    <div class="card">
+      <h2>ثبت اقامتگاه جدید (مخصوص میزبانان)</h2>
+      <form id="hostForm">
         <div class="form-group">
-          <label>نام و نام خانوادگی میهمان:</label>
-          <input type="text" id="guestName" required placeholder="مثلاً: علی رضایی" />
+          <label>نام اقامتگاه</label>
+          <input type="text" id="hostTitle" class="form-control" required placeholder="مثلاً: اقامتگاه سنتی عمو رحمان">
         </div>
         <div class="form-group">
-          <label>شماره تماس:</label>
-          <input type="tel" id="guestPhone" required placeholder="مثلاً: 09123456789" />
+          <label>شهر / منطقه</label>
+          <input type="text" id="hostLocation" class="form-control" required placeholder="مثلاً: الموت، قزوین">
         </div>
         <div class="form-group">
-          <label>تعداد شب اقامت:</label>
-          <input type="number" id="guestNights" min="1" value="1" required />
+          <label>قیمت هر شب (تومان)</label>
+          <input type="number" id="hostPrice" class="form-control" required placeholder="مثلاً: 950000">
         </div>
-        <div style="background: #f0fdfa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; color: #0f766e; font-size: 0.95rem;">
-          💳 <b>پرداخت امن پلتفرم:</b> مبلغ کل به حساب مدیریت پلتفرم (آقای برخورداری) واریز شده و رزرو قطعی می‌گردد.
+        <div class="form-group">
+          <label>توضیحات و امکانات</label>
+          <input type="text" id="hostDesc" class="form-control" required placeholder="مثلاً: دارای صبحانه محلی و ویلای سنتی">
         </div>
-        <div class="modal-actions">
-          <button type="button" class="btn-cancel" onclick="closeReserveModal()">انصراف</button>
-          <button type="submit" class="btn-submit" style="background: #0284c7;">پرداخت آنلاین و ثبت رزرو</button>
-        </div>
+        <button type="submit" class="btn">ثبت اقامتگاه در سایت</button>
       </form>
     </div>
-  </div>
 
-  <!-- مودال ثبت اقامتگاه جدید (میزبان) -->
-  <div class="modal" id="hostModal">
-    <div class="modal-content">
-      <h3>ثبت اقامتگاه جدید توسط میزبان</h3>
-      <form id="hostForm" onsubmit="saveProperty(event)">
-        <div class="form-group">
-          <label>نام اقامتگاه:</label>
-          <input type="text" id="propTitle" required placeholder="مثلاً: بوم‌گردی باران" />
-        </div>
-        <div class="form-group">
-          <label>استان:</label>
-          <input type="text" id="propProvince" required placeholder="مثلاً: مازندران" />
-        </div>
-        <div class="form-group">
-          <label>شهر / منطقه:</label>
-          <input type="text" id="propLocation" required placeholder="مثلاً: رامسر، جواهرده" />
-        </div>
-        <div class="form-group">
-          <label>قیمت هر شب (به تومان - عددی):</label>
-          <input type="number" id="propPrice" required placeholder="مثلاً: 1400000" />
-        </div>
-        <div class="form-group">
-          <label>لینک عکس (آدرس اینترنتی تصویر):</label>
-          <input type="url" id="propImage" required placeholder="https://..." />
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn-cancel" onclick="closeHostModal()">انصراف</button>
-          <button type="submit" class="btn-submit">ثبت و انتشار</button>
-        </div>
-      </form>
+    <!-- پنل مدیریت (حذف اقامتگاه‌ها) -->
+    <div class="card">
+      <h2>پنل مدیریت پلتفرم</h2>
+      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">برای حذف اقامتگاه‌های ثبت شده:</p>
+      <div id="adminListContainer"></div>
     </div>
+
   </div>
 
-  <!-- مودال پنل مدیریت مدیر -->
-  <div class="modal" id="adminModal">
+  <!-- مودم رزرو و درگاه پرداخت -->
+  <div class="modal" id="bookingModal">
     <div class="modal-content">
-      <h3>پنل مدیریت پلتفرم (حذف اقامتگاه‌ها)</h3>
-      <div id="adminList" style="max-height: 50vh; overflow-y: auto; margin-top: 1rem;"></div>
-      <div class="modal-actions" style="margin-top: 1.5rem;">
-        <button type="button" class="btn-cancel" onclick="closeAdminModal()">بستن</button>
-      </div>
+      <h3>تایید و پرداخت آنلاین</h3>
+      <div id="bookingDetails"></div>
+      <button class="btn" id="payBtn" style="background: #16a34a; margin-top: 10px;">پرداخت و قطعی کردن رزرو</button>
+      <button class="btn btn-secondary" onclick="closeModal()">انصراف</button>
     </div>
   </div>
 
   <script>
-    const defaultProperties = [
-      {
-        id: 1,
-        title: "اقامتگاه بوم‌گردی ناردشت",
-        province: "مازندران",
-        location: "سوادکوه، زیراب",
-        priceVal: 1200000,
-        price: "۱,۲۰۰,۰۰۰ تومان / هر شب",
-        image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&auto=format&fit=crop&q=80"
-      },
-      {
-        id: 2,
-        title: "اقامتگاه سنتی عمو رحمان",
-        province: "اصفهان",
-        location: "کاشان، بافت تاریخی",
-        priceVal: 950000,
-        price: "۹۵۰,۰۰۰ تومان / هر شب",
-        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&auto=format&fit=crop&q=80"
-      },
-      {
-        id: 3,
-        title: "کلبه چوبی جنگلی هیرکانی",
-        province: "گیلان",
-        location: "ماسال، اول بلنگاه",
-        priceVal: 1500000,
-        price: "۱,۵۰۰,۰۰۰ تومان / هر شب",
-        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&auto=format&fit=crop&q=80"
-      },
-      {
-        id: 4,
-        title: "اقامتگاه بوم‌گردی آتشونی",
-        province: "خراسان جنوبی",
-        location: "روستای گرمه، طبس",
-        priceVal: 800000,
-        price: "۸۰۰,۰۰۰ تومان / هر شب",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&auto=format&fit=crop&q=80"
-      }
+    // اطلاعات اولیه اقامتگاه‌ها (قابل ویرایش مستقیم در کد)
+    let defaultListings = [
+      { id: 1, title: 'اقامتگاه سنتی عمو رحمان', location: 'الموت - قزوین', price: 950000, desc: 'دارای بافت سنتی، چشم‌انداز عالی و صبحانه محلی' },
+      { id: 2, title: 'کلبه جنگلی کوهستان', location: 'ماسال - گیلان', price: 1400000, desc: 'محیطی دنج و آرام میان درختان سرسبز' }
     ];
 
-    let properties = JSON.parse(localStorage.getItem("iranja_properties")) || defaultProperties;
-
-    const els = {
-      grid: document.getElementById("propertyGrid"),
-      searchInput: document.getElementById("searchInput"),
-      provinceSelect: document.getElementById("provinceSelect"),
-      countBadge: document.getElementById("countBadge"),
-      hostModal: document.getElementById("hostModal"),
-      adminModal: document.getElementById("adminModal"),
-      reserveModal: document.getElementById("reserveModal"),
-      adminList: document.getElementById("adminList")
-    };
-
-    function normalizeStr(s){
-      return (s ?? "").toString().trim().toLowerCase();
+    // بارگذاری از حافظه مرورگر یا استفاده از پیش‌فرض‌ها
+    function getListings() {
+      let saved = localStorage.getItem('iranja_listings');
+      return saved ? JSON.parse(saved) : defaultListings;
     }
 
-    function renderList(list) {
-      els.countBadge.textContent = `${list.length} مورد`;
+    function saveListings(listings) {
+      localStorage.setItem('iranja_listings', JSON.stringify(listings));
+      renderAll();
+    }
 
-      if (list.length === 0) {
-        els.grid.innerHTML = '<div class="empty-state">موردی مطابق با جستجوی شما یافت نشد.</div>';
+    // نمایش اقامتگاه‌ها در صفحه اصلی
+    function renderListings() {
+      let listings = getListings();
+      let container = document.getElementById('listingsContainer');
+      
+      if (listings.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#64748b;">هنوز اقامتگاهی ثبت نشده است.</p>';
         return;
       }
 
-      els.grid.innerHTML = list.map(item => `
-        <div class="card">
-          <img src="${item.image}" alt="${item.title}" loading="lazy">
-          <div class="card-content">
-            <div class="card-title">${item.title}</div>
-            <div class="card-location">📍 ${item.location} (${item.province})</div>
-            <div class="card-price">${item.price}</div>
-            <a href="javascript:void(0)" class="btn-reserve" onclick="openReserveModal(${item.id})">درخواست رزرو و پرداخت</a>
+      let html = '';
+      listings.forEach(item => {
+        html += `
+          <div class="listing-item">
+            <h3>${item.title}</h3>
+            <p>📍 منطقه: ${item.location}</p>
+            <p>📝 توضیحات: ${item.desc}</p>
+            <p><span class="badge">💰 ${Number(item.price).toLocaleString()} تومان / هر شب</span></p>
+            <button class="btn" style="margin-top: 10px;" onclick="openBooking('${item.title}', ${item.price})">رزرو آنلاین و پرداخت</button>
           </div>
-        </div>
-      `).join("");
-    }
-
-    function filterProperties() {
-      const keyword = normalizeStr(els.searchInput.value);
-      const province = (els.provinceSelect.value ?? "").toString().trim();
-
-      const filtered = properties.filter(item => {
-        const title = normalizeStr(item.title);
-        const location = normalizeStr(item.location);
-        const prov = (item.province ?? "").toString().trim();
-
-        const matchKeyword = !keyword || title.includes(keyword) || location.includes(keyword) || prov.toLowerCase().includes(keyword);
-        const matchProvince = !province || prov === province;
-
-        return matchKeyword && matchProvince;
+        `;
       });
-
-      renderList(filtered);
+      container.innerHTML = html;
     }
 
-    function resetFilters(){
-      els.searchInput.value = "";
-      els.provinceSelect.value = "";
-      renderList(properties);
-    }
-
-    // مودال رزرو آنلاین
-    function openReserveModal(id) {
-      const selected = properties.find(p => p.id === id);
-      if (!selected) return;
-      document.getElementById("reservePropId").value = selected.id;
-      document.getElementById("reserveModalTitle").textContent = `رزرو: ${selected.title}`;
-      els.reserveModal.style.display = "flex";
-    }
-    function closeReserveModal() { els.reserveModal.style.display = "none"; }
-
-    function processPayment(e) {
-      e.preventDefault();
-      const propId = document.getElementById("reservePropId").value;
-      const selected = properties.find(p => p.id == propId);
-      const nights = document.getElementById("guestNights").value;
-      const guestName = document.getElementById("guestName").value;
+    // نمایش لیست مدیریت برای حذف
+    function renderAdminList() {
+      let listings = getListings();
+      let container = document.getElementById('adminListContainer');
       
-      const totalAmount = (selected.priceVal || 1000000) * nights;
+      if (listings.length === 0) {
+        container.innerHTML = '<p style="font-size: 0.9rem; color:#64748b;">موردی برای مدیریت وجود ندارد.</p>';
+        return;
+      }
 
-      // شبیه‌سازی اتصال به درگاه پرداخت بانکی (که مبلغ به حساب شما می‌آید)
-      alert(`اتصال به درگاه پرداخت امن بانکی...\n\n` +
-            `میهمان گرامی: ${guestName}\n` +
-            `اقامتگاه: ${selected.title}\n` +
-            `تعداد شب: ${nights} شب\n` +
-            `مبلغ قابل پرداخت: ${totalAmount.toLocaleString()} تومان\n\n` +
-            `✅ پرداخت با موفقیت انجام شد و وجه به حساب مدیریت پلتفرم (آقای برخورداری) واریز گردید.\n` +
-            `پیامک تایید رزرو و اطلاعات تماس میزبان برای شما ارسال شد.`);
-      
-      closeReserveModal();
-      document.getElementById("reserveForm").reset();
+      let html = '';
+      listings.forEach(item => {
+        html += `
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 8px 0; font-size: 0.9rem;">
+            <span>${item.title} (${item.location})</span>
+            <button class="btn btn-danger" style="width: auto; padding: 5px 12px; font-size: 0.8rem;" onclick="deleteListing(${item.id})">حذف</button>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
     }
 
-    // کنترل مودال ثبت اقامتگاه
-    function openHostModal() { els.hostModal.style.display = "flex"; }
-    function closeHostModal() { els.hostModal.style.display = "none"; }
+    function renderAll() {
+      renderListings();
+      renderAdminList();
+    }
 
-    function saveProperty(e) {
+    // ثبت اقامتگاه جدید توسط میزبان
+    document.getElementById('hostForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const rawPrice = Number(document.getElementById("propPrice").value);
-      const newProp = {
+      let title = document.getElementById('hostTitle').value;
+      let location = document.getElementById('hostLocation').value;
+      let price = document.getElementById('hostPrice').value;
+      let desc = document.getElementById('hostDesc').value;
+
+      let listings = getListings();
+      let newItem = {
         id: Date.now(),
-        title: document.getElementById("propTitle").value,
-        province: document.getElementById("propProvince").value,
-        location: document.getElementById("propLocation").value,
-        priceVal: rawPrice,
-        price: rawPrice.toLocaleString() + " تومان / هر شب",
-        image: document.getElementById("propImage").value
+        title: title,
+        location: location,
+        price: Number(price),
+        desc: desc
       };
 
-      properties.unshift(newProp);
-      localStorage.setItem("iranja_properties", JSON.stringify(properties));
-      
-      closeHostModal();
-      document.getElementById("hostForm").reset();
-      fillProvinceOptions();
-      renderList(properties);
-      alert("اقامتگاه شما با موفقیت ثبت و روی سایت منتشر شد!");
-    }
+      listings.push(newItem);
+      saveListings(listings);
+      alert('اقامتگاه شما با موفقیت ثبت شد و در سایت قرار گرفت!');
+      document.getElementById('hostForm').reset();
+    });
 
-    // کنترل پنل مدیریت مدیر
-    function openAdminModal() {
-      renderAdminList();
-      els.adminModal.style.display = "flex";
-    }
-    function closeAdminModal() { els.adminModal.style.display = "none"; }
-
-    function renderAdminList() {
-      if (properties.length === 0) {
-        els.adminList.innerHTML = '<p style="text-align:center; color:#64748b;">هیچ اقامتگاهی ثبت نشده است.</p>';
-        return;
-      }
-
-      els.adminList.innerHTML = properties.map(item => `
-        <div class="admin-item">
-          <span><b>${item.title}</b> (${item.province})</span>
-          <button class="btn-delete-prop" onclick="deleteProperty(${item.id})">حذف</button>
-        </div>
-      `).join("");
-    }
-
-    function deleteProperty(id) {
-      if (confirm("آیا از حذف این اقامتگاه مطمئن هستید؟")) {
-        properties = properties.filter(p => p.id !== id);
-        localStorage.setItem("iranja_properties", JSON.stringify(properties));
-        renderAdminList();
-        fillProvinceOptions();
-        renderList(properties);
+    // حذف اقامتگاه توسط مدیر
+    function deleteListing(id) {
+      if (confirm('آیا از حذف این اقامتگاه مطمئن هستید؟')) {
+        let listings = getListings();
+        listings = listings.filter(item => item.id !== id);
+        saveListings(listings);
       }
     }
 
-    function fillProvinceOptions(){
-      const currentVal = els.provinceSelect.value;
-      const provinces = Array.from(new Set(properties.map(x => x.province))).sort((a,b)=>a.localeCompare(b,"fa"));
-      
-      els.provinceSelect.innerHTML = '<option value="">همه استان‌ها</option>';
-      provinces.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p;
-        opt.textContent = p;
-        els.provinceSelect.appendChild(opt);
-      });
-      els.provinceSelect.value = currentVal;
+    // سیستم رزرو و پرداخت
+    let selectedRoom = null;
+
+    function openBooking(title, price) {
+      selectedRoom = { title, price };
+      document.getElementById('bookingDetails').innerHTML = `
+        <p><strong>اقامتگاه:</strong> ${title}</p>
+        <p><strong>مبلغ قابل پرداخت (1 شب):</strong> ${Number(price).toLocaleString()} تومان</p>
+        <p style="color: #0f766e; font-size: 0.9rem;">🔒 اتصال به درگاه امن بانکی مدیریت پلتفرم (آقای برخورداری)...</p>
+      `;
+      document.getElementById('bookingModal').style.display = 'flex';
     }
 
-    // راه‌اندازی اولیه
-    fillProvinceOptions();
-    renderList(properties);
+    function closeModal() {
+      document.getElementById('bookingModal').style.display = 'none';
+    }
+
+    document.getElementById('payBtn').addEventListener('click', function() {
+      alert('✅ پرداخت با موفقیت انجام شد و وجه به حساب مدیریت پلتفرم (آقای برخورداری) واریز گردید.\nپیامک تایید رزرو برای شما ارسال شد.');
+      closeModal();
+    });
+
+    // اجرای اولیه
+    renderAll();
   </script>
+
 </body>
 </html>
