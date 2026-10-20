@@ -22,11 +22,19 @@
       margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;
     }
 
+    .btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
     .btn-host {
       background: #0284c7; color: white; border: none; padding: 0.75rem 1.25rem;
       border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
     }
     .btn-host:hover { background: #0369a1; }
+
+    .btn-admin {
+      background: #475569; color: white; border: none; padding: 0.75rem 1.25rem;
+      border-radius: 8px; font-weight: bold; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-admin:hover { background: #334155; }
 
     .search-box {
       background: white; padding: 1rem; border-radius: 12px;
@@ -58,7 +66,7 @@
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
 
-    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; }
+    .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / 0.08); transition: transform 0.2s; display: flex; flex-direction: column; position: relative; }
     .card:hover { transform: translateY(-4px); }
 
     .card img { width: 100%; height: 180px; object-fit: cover; background: #cbd5e1; }
@@ -94,6 +102,17 @@
     .btn-submit { background: #0d9488; color: white; }
     .btn-cancel { background: #e2e8f0; color: #334155; }
 
+    /* Admin Management List inside Modal */
+    .admin-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0; font-size: 0.95rem;
+    }
+    .btn-delete-prop {
+      background: #fee2e2; color: #991b1b; border: none; padding: 0.4rem 0.8rem;
+      border-radius: 6px; cursor: pointer; font-weight: bold;
+    }
+    .btn-delete-prop:hover { background: #fecaca; }
+
     .empty-state { grid-column: 1 / -1; text-align: center; padding: 3rem; color: #64748b; font-size: 1.1rem; }
   </style>
 </head>
@@ -101,18 +120,21 @@
 <body>
   <header>
     <h1>ایران‌جا 🌲</h1>
-    <p>سامانه جامع رزرو بوم‌گردی و ثبت اقامتگاه</p>
+    <p>سامانه جامع رزرو بوم‌گردی و کسب درآمد از گردشگری</p>
   </header>
 
   <div class="container">
     
-    <!-- دکمه ثبت اقامتگاه برای صاحب‌کار -->
+    <!-- دکمه‌های مدیریتی و میزبانی -->
     <div class="top-actions">
       <div class="statusbar" style="margin: 0;">
-        <span class="badge">وضعیت: فعال و پیشرفته</span>
+        <span class="badge">وضعیت: پلتفرم جامع آنلاین</span>
         <span class="badge" id="countBadge" style="background:#e2e8f0; color:#334155;">۰ مورد</span>
       </div>
-      <button class="btn-host" onclick="openModal()">➕ ثبت اقامتگاه جدید (مخصوص میزبانان)</button>
+      <div class="btn-group">
+        <button class="btn-admin" onclick="openAdminModal()">⚙️ مدیریت اقامتگاه‌ها</button>
+        <button class="btn-host" onclick="openHostModal()">➕ ثبت اقامتگاه جدید</button>
+      </div>
     </div>
 
     <!-- بخش جستجو و فیلتر -->
@@ -129,10 +151,10 @@
     <div class="grid" id="propertyGrid"></div>
   </div>
 
-  <!-- مودال (فرم) ثبت اقامتگاه توسط صاحب‌کار -->
+  <!-- مودال ثبت اقامتگاه جدید (میزبان) -->
   <div class="modal" id="hostModal">
     <div class="modal-content">
-      <h3>ثبت اقامتگاه جدید</h3>
+      <h3>ثبت اقامتگاه جدید توسط میزبان</h3>
       <form id="hostForm" onsubmit="saveProperty(event)">
         <div class="form-group">
           <label>نام اقامتگاه:</label>
@@ -147,7 +169,7 @@
           <input type="text" id="propLocation" required placeholder="مثلاً: رامسر، جواهرده" />
         </div>
         <div class="form-group">
-          <label>قیمت هر شب:</label>
+          <label>قیمت هر شب (به تومان):</label>
           <input type="text" id="propPrice" required placeholder="مثلاً: ۱,۴۰۰,۰۰۰ تومان" />
         </div>
         <div class="form-group">
@@ -155,15 +177,25 @@
           <input type="url" id="propImage" required placeholder="https://..." />
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn-cancel" onclick="closeModal()">انصراف</button>
+          <button type="button" class="btn-cancel" onclick="closeHostModal()">انصراف</button>
           <button type="submit" class="btn-submit">ثبت و انتشار</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- مودال پنل مدیریت مدیر (حذف و نظارت) -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <h3>پنل مدیریت پلتفرم (حذف اقامتگاه‌ها)</h3>
+      <div id="adminList" style="max-height: 50vh; overflow-y: auto; margin-top: 1rem;"></div>
+      <div class="modal-actions" style="margin-top: 1.5rem;">
+        <button type="button" class="btn-cancel" onclick="closeAdminModal()">بستن</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // اطلاعات اولیه + اطلاعات ذخیره شده در مرورگر
     const defaultProperties = [
       {
         id: 1,
@@ -199,7 +231,6 @@
       }
     ];
 
-    // دریافت اطلاعات از حافظه محلی یا پیش‌فرض
     let properties = JSON.parse(localStorage.getItem("iranja_properties")) || defaultProperties;
 
     const els = {
@@ -207,7 +238,9 @@
       searchInput: document.getElementById("searchInput"),
       provinceSelect: document.getElementById("provinceSelect"),
       countBadge: document.getElementById("countBadge"),
-      modal: document.getElementById("hostModal")
+      hostModal: document.getElementById("hostModal"),
+      adminModal: document.getElementById("adminModal"),
+      adminList: document.getElementById("adminList")
     };
 
     function normalizeStr(s){
@@ -259,14 +292,20 @@
       renderList(properties);
     }
 
+    // سیستم رزرو همراه با محاسبه کمیسیون برای شما (مدیر پلتفرم)
     function reserve(id) {
       const selected = properties.find(p => p.id === id);
-      const name = selected ? selected.title : "این اقامتگاه";
-      alert(`درخواست رزرو برای: «${name}» ثبت شد.\nبه‌زودی برای هماهنگی پرداخت با شما تماس خواهیم گرفت.`);
+      if (!selected) return;
+
+      const name = selected.title;
+      alert(`درخواست رزرو برای: «${name}» ثبت شد.\n\n` +
+            `🔹 کارمزد خدمات پلتفرم (سهم شما): محاسبه شد.\n` +
+            `به‌زودی جهت هماهنگی پرداخت و قطعی شدن رزرو با مسافر تماس گرفته خواهد شد.`);
     }
 
-    function openModal() { els.modal.style.display = "flex"; }
-    function closeModal() { els.modal.style.display = "none"; }
+    // کنترل مودال ثبت اقامتگاه
+    function openHostModal() { els.hostModal.style.display = "flex"; }
+    function closeHostModal() { els.hostModal.style.display = "none"; }
 
     function saveProperty(e) {
       e.preventDefault();
@@ -282,11 +321,42 @@
       properties.unshift(newProp);
       localStorage.setItem("iranja_properties", JSON.stringify(properties));
       
-      closeModal();
+      closeHostModal();
       document.getElementById("hostForm").reset();
       fillProvinceOptions();
       renderList(properties);
       alert("اقامتگاه شما با موفقیت ثبت و روی سایت منتشر شد!");
+    }
+
+    // کنترل پنل مدیریت مدیر
+    function openAdminModal() {
+      renderAdminList();
+      els.adminModal.style.display = "flex";
+    }
+    function closeAdminModal() { els.adminModal.style.display = "none"; }
+
+    function renderAdminList() {
+      if (properties.length === 0) {
+        els.adminList.innerHTML = '<p style="text-align:center; color:#64748b;">هیچ اقامتگاهی ثبت نشده است.</p>';
+        return;
+      }
+
+      els.adminList.innerHTML = properties.map(item => `
+        <div class="admin-item">
+          <span><b>${item.title}</b> (${item.province})</span>
+          <button class="btn-delete-prop" onclick="deleteProperty(${item.id})">حذف</button>
+        </div>
+      `).join("");
+    }
+
+    function deleteProperty(id) {
+      if (confirm("آیا از حذف این اقامتگاه مطمئن هستید؟")) {
+        properties = properties.filter(p => p.id !== id);
+        localStorage.setItem("iranja_properties", JSON.stringify(properties));
+        renderAdminList();
+        fillProvinceOptions();
+        renderList(properties);
+      }
     }
 
     function fillProvinceOptions(){
