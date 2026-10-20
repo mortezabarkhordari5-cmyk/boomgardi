@@ -7,69 +7,114 @@
 
   <!-- فونت وزیرمتن -->
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  <!-- فونت آیکون FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
-    body { background-color: #f8fafc; color: #1e293b; direction: rtl; line-height: 1.6; }
-    header { background: #0f766e; color: white; padding: 20px 15px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-    header h1 { font-size: 1.5rem; margin-bottom: 5px; }
-    header p { font-size: 0.9rem; opacity: 0.9; }
+    body { background-color: #f1f5f9; color: #1e293b; direction: rtl; line-height: 1.7; }
+    
+    /* هدر زیبا و گرادیانت */
+    header { 
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); 
+      color: white; 
+      padding: 30px 15px; 
+      text-align: center; 
+      box-shadow: 0 4px 20px rgba(15, 118, 110, 0.2); 
+      border-bottom-left-radius: 24px;
+      border-bottom-right-radius: 24px;
+      margin-bottom: 25px;
+    }
+    header .logo-container {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 12px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.8);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      background: white;
+    }
+    header .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; letter-spacing: -0.5px; }
+    header p { font-size: 0.95rem; opacity: 0.9; }
 
-    .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+    .container { max-width: 850px; margin: 0 auto 40px auto; padding: 0 15px; }
 
-    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .card h2 { font-size: 1.2rem; color: #0f766e; margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+    /* کارت‌های مدرن */
+    .card { 
+      background: white; 
+      border-radius: 16px; 
+      padding: 24px; 
+      margin-bottom: 24px; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+      border: 1px solid #e2e8f0;
+    }
+    .card h2 { font-size: 1.25rem; color: #0f766e; margin-bottom: 18px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
 
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500; }
-    .form-control { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
-    .form-control:focus { outline: none; border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15,118,110,0.1); }
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 6px; font-size: 0.9rem; font-weight: 600; color: #334155; }
+    .form-control { width: 100%; padding: 12px 15px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; transition: all 0.2s; background: #fafafa; }
+    .form-control:focus { outline: none; border-color: #0f766e; background: #fff; box-shadow: 0 0 0 4px rgba(15,118,110,0.1); }
 
-    .btn { display: inline-block; width: 100%; padding: 12px; background: #0f766e; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; text-align: center; transition: background 0.2s; }
-    .btn:hover { background: #115e59; }
-    .btn-danger { background: #dc2626; }
-    .btn-danger:hover { background: #b91c1c; }
-    .btn-secondary { background: #475569; margin-top: 10px; }
-    .btn-success { background: #16a34a; }
-    .btn-success:hover { background: #15803d; }
+    /* دکمه‌های جذاب */
+    .btn { display: inline-block; width: 100%; padding: 14px; background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(15, 118, 110, 0.35); }
+    .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); }
+    .btn-danger:hover { box-shadow: 0 6px 15px rgba(220, 38, 38, 0.35); }
+    .btn-secondary { background: #64748b; margin-top: 10px; box-shadow: none; }
+    .btn-success { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
+    .btn-success:hover { box-shadow: 0 6px 15px rgba(22, 163, 74, 0.35); }
 
-    .listing-item { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 20px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .listing-img { width: 100%; height: 200px; object-fit: cover; background: #e2e8f0; }
-    .listing-content { padding: 15px; }
-    .listing-item h3 { color: #0f766e; font-size: 1.1rem; margin-bottom: 5px; }
-    .listing-item p { font-size: 0.9rem; color: #475569; margin-bottom: 8px; }
+    /* اقامتگاه‌ها */
+    .listing-item { border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; margin-bottom: 22px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s; }
+    .listing-item:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+    .listing-img-box { position: relative; width: 100%; height: 220px; background: #e2e8f0; }
+    .listing-img { width: 100%; height: 100%; object-fit: cover; }
+    .price-tag { position: absolute; bottom: 12px; left: 12px; background: rgba(15, 118, 110, 0.9); color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    
+    .listing-content { padding: 18px; }
+    .listing-item h3 { color: #0f766e; font-size: 1.2rem; margin-bottom: 6px; font-weight: 700; }
+    .listing-item p { font-size: 0.9rem; color: #64748b; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 
-    .badge { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+    .badge { display: inline-block; background: #ccfbf1; color: #0f766e; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; }
 
-    /* Modal */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-    .modal-content { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 450px; text-align: right; }
-    .modal-content h3 { color: #0f766e; margin-bottom: 15px; text-align: center; }
-    .modal-content p { font-size: 0.95rem; margin-bottom: 10px; }
+    /* مودال */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
+    .modal-content { background: white; padding: 30px; border-radius: 18px; width: 100%; max-width: 480px; text-align: right; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-content h3 { color: #0f766e; margin-bottom: 18px; text-align: center; font-size: 1.3rem; }
 
-    .admin-bar { background: #fef3c7; border: 1px solid #f59e0b; padding: 10px; border-radius: 8px; margin-bottom: 20px; text-align: center; font-size: 0.9rem; color: #92400e; }
+    .admin-bar { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #f59e0b; padding: 12px 15px; border-radius: 12px; margin-bottom: 24px; text-align: center; font-size: 0.9rem; color: #92400e; font-weight: 600; box-shadow: 0 2px 6px rgba(245, 158, 11, 0.1); }
   </style>
 </head>
 <body>
 
   <header>
+    <div class="logo-container">
+      <!-- استفاده از لوگوی طراحی شده جدید -->
+      <img src="image_gen_a0ba7027-0503-45a2-8b96-5f47b57d1662_0.webp" alt="لوگو ایران‌جا">
+    </div>
     <h1>ایران‌جا</h1>
-    <p>سامانه جامع بوم‌گردی و رزرو اقامتگاه</p>
+    <p>سامانه جامع بوم‌گردی و رزرو اقامتگاه در سراسر ایران</p>
   </header>
 
   <div class="container">
 
     <!-- نوار مدیریت -->
     <div class="admin-bar">
-      مدیر محترم پلتفرم: آقای برخورداری (تلفن پشتیبانی: 09371880982)
+      <i class="fa-solid fa-shield-halved"></i> مدیر محترم پلتفرم: آقای برخورداری (تلفن پشتیبانی: 09371880982)
     </div>
 
     <!-- بخش جستجو و لیست اقامتگاه‌ها -->
     <div class="card">
-      <h2>اقامتگاه‌های فعال</h2>
+      <h2><i class="fa-solid fa-mountain-sun"></i> اقامتگاه‌های فعال</h2>
       
       <!-- فیلتر جستجو -->
-      <div class="form-group" style="margin-bottom: 20px;">
+      <div class="form-group" style="margin-bottom: 22px;">
         <input type="text" id="searchInput" class="form-control" placeholder="🔍 جستجو بر اساس نام اقامتگاه، شهر یا منطقه (مثلاً: الموت، ماسال)..." oninput="renderListings()">
       </div>
 
@@ -78,7 +123,7 @@
 
     <!-- فرم ثبت اقامتگاه توسط میزبان -->
     <div class="card">
-      <h2>ثبت اقامتگاه جدید (مخصوص میزبانان)</h2>
+      <h2><i class="fa-solid fa-house-chimney-user"></i> ثبت اقامتگاه جدید (مخصوص میزبانان)</h2>
       <form id="hostForm">
         <div class="form-group">
           <label>نام اقامتگاه</label>
@@ -100,14 +145,14 @@
           <label>توضیحات و امکانات</label>
           <input type="text" id="hostDesc" class="form-control" required placeholder="مثلاً: دارای صبحانه محلی و ویلای سنتی">
         </div>
-        <button type="submit" class="btn">ثبت اقامتگاه در سایت</button>
+        <button type="submit" class="btn"><i class="fa-solid fa-plus-circle"></i> ثبت اقامتگاه در سایت</button>
       </form>
     </div>
 
     <!-- پنل مدیریت (حذف اقامتگاه‌ها) -->
     <div class="card">
-      <h2>پنل مدیریت پلتفرم</h2>
-      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 10px;">برای حذف اقامتگاه‌های ثبت شده:</p>
+      <h2><i class="fa-solid fa-user-gear"></i> پنل مدیریت پلتفرم</h2>
+      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">برای حذف اقامتگاه‌های ثبت شده:</p>
       <div id="adminListContainer"></div>
     </div>
 
@@ -119,10 +164,10 @@
       <h3>کارت‌به‌کارت و قطعی کردن رزرو</h3>
       <div id="bookingDetails"></div>
       
-      <div style="background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px dashed #cbd5e1; margin: 15px 0;">
-        <p style="margin: 0 0 5px 0; font-size: 13px;">لطفاً مبلغ را به کارت زیر واریز کنید:</p>
-        <p style="font-family: monospace; font-size: 17px; font-weight: bold; color: #0f766e; margin: 5px 0;">۶۰۳۷-۹۹۷۴-XXXX-XXXX</p>
-        <p style="margin: 0; font-size: 13px; color: #475569;">به نام: <strong>مرتضی برخورداری</strong></p>
+      <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1.5px dashed #cbd5e1; margin: 18px 0; text-align: center;">
+        <p style="margin: 0 0 5px 0; font-size: 13px; color: #475569;">لطفاً مبلغ را به کارت زیر واریز کنید:</p>
+        <p style="font-family: monospace; font-size: 18px; font-weight: bold; color: #0f766e; margin: 5px 0;">۶۰۳۷-۹۹۷۴-XXXX-XXXX</p>
+        <p style="margin: 0; font-size: 13px; color: #334155;">به نام: <strong>مرتضی برخورداری</strong></p>
       </div>
 
       <div class="form-group">
@@ -135,7 +180,7 @@
         <input type="tel" id="userPhoneInput" class="form-control" placeholder="مثلاً: 09123456789">
       </div>
 
-      <button class="btn btn-success" id="payBtn">ثبت فیش و ارسال اطلاعات به مدیر</button>
+      <button class="btn btn-success" id="payBtn"><i class="fa-solid fa-check-circle"></i> ثبت فیش و ارسال اطلاعات به مدیر</button>
       <button class="btn btn-secondary" onclick="closeModal()">انصراف</button>
     </div>
   </div>
@@ -168,7 +213,7 @@
       });
 
       if (filteredListings.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;">موردی با این مشخصات یافت نشد.</p>';
+        container.innerHTML = '<p style="text-align:center; color:#64748b; padding: 25px;"><i class="fa-solid fa-face-frown" style="font-size:24px; margin-bottom:8px; display:block;"></i>موردی با این مشخصات یافت نشد.</p>';
         return;
       }
 
@@ -176,13 +221,15 @@
       filteredListings.forEach(item => {
         html += `
           <div class="listing-item">
-            <img src="${item.image}" alt="${item.title}" class="listing-img">
+            <div class="listing-img-box">
+              <img src="${item.image}" alt="${item.title}" class="listing-img">
+              <div class="price-tag">💰 ${Number(item.price).toLocaleString()} تومان / شب</div>
+            </div>
             <div class="listing-content">
               <h3>${item.title}</h3>
-              <p>📍 منطقه: ${item.location}</p>
-              <p>📝 توضیحات: ${item.desc}</p>
-              <p><span class="badge">💰 ${Number(item.price).toLocaleString()} تومان / هر شب</span></p>
-              <button class="btn" style="margin-top: 10px;" onclick="openBooking('${item.title}', ${item.price})">رزرو آنلاین و پرداخت</button>
+              <p><i class="fa-solid fa-location-dot" style="color:#0f766e;"></i> منطقه: ${item.location}</p>
+              <p><i class="fa-solid fa-circle-info" style="color:#0f766e;"></i> توضیحات: ${item.desc}</p>
+              <button class="btn" style="margin-top: 12px;" onclick="openBooking('${item.title}', ${item.price})"><i class="fa-solid fa-calendar-check"></i> رزرو آنلاین و پرداخت</button>
             </div>
           </div>
         `;
@@ -202,9 +249,9 @@
       let html = '';
       listings.forEach(item => {
         html += `
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 8px 0; font-size: 0.9rem;">
-            <span>${item.title} (${item.location})</span>
-            <button class="btn btn-danger" style="width: auto; padding: 5px 12px; font-size: 0.8rem;" onclick="deleteListing(${item.id})">حذف</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 10px 0; font-size: 0.9rem;">
+            <span><i class="fa-solid fa-house" style="color:#0f766e; margin-left:6px;"></i>${item.title} (${item.location})</span>
+            <button class="btn btn-danger" style="width: auto; padding: 6px 14px; font-size: 0.85rem;" onclick="deleteListing(${item.id})"><i class="fa-solid fa-trash"></i> حذف</button>
           </div>
         `;
       });
@@ -216,7 +263,6 @@
       renderAdminList();
     }
 
-    // ثبت اقامتگاه جدید به همراه بارگذاری تصویر
     document.getElementById('hostForm').addEventListener('submit', function(e) {
       e.preventDefault();
       let title = document.getElementById('hostTitle').value;
@@ -242,7 +288,7 @@
 
           listings.push(newItem);
           saveListings(listings);
-          alert('اقامتگاه شما با تصویر مربوطه با موفقیت ثبت شد!');
+          alert('✅ اقامتگاه شما با تصویر مربوطه با موفقیت ثبت شد!');
           document.getElementById('hostForm').reset();
         };
         reader.readAsDataURL(imageFile);
@@ -257,13 +303,10 @@
       }
     }
 
-    let selectedRoom = null;
-
     function openBooking(title, price) {
-      selectedRoom = { title, price };
       document.getElementById('bookingDetails').innerHTML = `
-        <p><strong>اقامتگاه:</strong> ${title}</p>
-        <p><strong>مبلغ قابل پرداخت:</strong> ${Number(price).toLocaleString()} تومان</p>
+        <p style="margin-bottom:6px;"><strong>اقامتگاه:</strong> ${title}</p>
+        <p style="margin-bottom:6px;"><strong>مبلغ قابل پرداخت:</strong> ${Number(price).toLocaleString()} تومان</p>
       `;
       document.getElementById('trackingCodeInput').value = '';
       document.getElementById('userPhoneInput').value = '';
