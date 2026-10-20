@@ -47,13 +47,10 @@
       font-size: .95rem;
     }
     .badge{
-      background:#e2e8f0;
+      background:#dcfce7; color:#166534;
       padding:.35rem .6rem;
       border-radius: 999px;
     }
-    .badge.ok{ background:#dcfce7; color:#166534; }
-    .badge.err{ background:#fee2e2; color:#991b1b; }
-    .badge.load{ background:#e0f2fe; color:#075985; }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
 
@@ -98,59 +95,60 @@
 
     <!-- وضعیت اتصال -->
     <div class="statusbar">
-      <span id="statusBadge" class="badge load">در حال اتصال به دیتابیس...</span>
-      <span class="badge" id="countBadge">۰ مورد</span>
+      <span class="badge">وضعیت: آماده و فعال (آفلاین)</span>
+      <span class="badge" id="countBadge" style="background:#e2e8f0; color:#334155;">۰ مورد</span>
     </div>
 
     <!-- لیست اقامتگاه‌ها -->
     <div class="grid" id="propertyGrid"></div>
   </div>
 
-  <!-- Supabase JS v2 -->
-  <script type="module">
-    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-    const SUPABASE_URL = "https://btuzkqlbvplevvgkuzdb.supabase.co";
-    // کلید Publishable واقعی شما (دقیقاً همان کلیدی که از پنل Supabase کپی کردید را به جای این متن بگذارید)
-    const SUPABASE_ANON_KEY = "sb_publishable_pzLdby6pRSS_pBD18ClfT...";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    const TABLE_NAME = "lodging";
-
-    let properties = [];
+  <script>
+    // اطلاعات اقامتگاه‌ها مستقیماً داخل خود سایت (بدون نیاز به سوپابیس)
+    const properties = [
+      {
+        id: 1,
+        title: "اقامتگاه بوم‌گردی ناردشت",
+        province: "مازندران",
+        location: "سوادکوه، زیراب",
+        price: "۱,۲۰۰,۰۰۰ تومان / هر شب",
+        image: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 2,
+        title: "اقامتگاه سنتی عمو رحمان",
+        province: "اصفهان",
+        location: "کاشان، بافت تاریخی",
+        price: "۹۵۰,۰۰۰ تومان / هر شب",
+        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 3,
+        title: "کلبه چوبی جنگلی هیرکانی",
+        province: "گیلان",
+        location: "ماسال، اول بلنگاه",
+        price: "۱,۵۰۰,۰۰۰ تومان / هر شب",
+        image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&auto=format&fit=crop&q=80"
+      },
+      {
+        id: 4,
+        title: "اقامتگاه بوم‌گردیه آتشونی",
+        province: "خراسان جنوبی",
+        location: "روستای گرمه، طبس",
+        price: "۸۰۰,۰۰۰ تومان / هر شب",
+        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&auto=format&fit=crop&q=80"
+      }
+    ];
 
     const els = {
       grid: document.getElementById("propertyGrid"),
       searchInput: document.getElementById("searchInput"),
       provinceSelect: document.getElementById("provinceSelect"),
-      statusBadge: document.getElementById("statusBadge"),
       countBadge: document.getElementById("countBadge"),
     };
 
-    function setStatus(type, text){
-      els.statusBadge.className = "badge " + (type === "ok" ? "ok" : type === "err" ? "err" : "load");
-      els.statusBadge.textContent = text;
-    }
-
     function normalizeStr(s){
       return (s ?? "").toString().trim().toLowerCase();
-    }
-
-    function safeText(s, fallback=""){
-      const t = (s ?? "").toString().trim();
-      return t.length ? t : fallback;
-    }
-
-    function safeImage(url){
-      const u = (url ?? "").toString().trim();
-      return u.length ? u : "https://picsum.photos/seed/iranja/600/400";
-    }
-
-    function formatPrice(value){
-      if (value === null || value === undefined) return "قیمت نامشخص";
-      const s = value.toString().trim();
-      if (!s) return "قیمت نامشخص";
-      return s.includes("تومان") || s.includes("ریال") ? s : (s + " تومان / هر شب");
     }
 
     function renderList(list) {
@@ -163,18 +161,18 @@
 
       els.grid.innerHTML = list.map(item => `
         <div class="card">
-          <img src="${safeImage(item.image)}" alt="${safeText(item.title, "اقامتگاه")}" loading="lazy">
+          <img src="${item.image}" alt="${item.title}" loading="lazy">
           <div class="card-content">
-            <div class="card-title">${safeText(item.title, "بدون عنوان")}</div>
-            <div class="card-location">📍 ${safeText(item.location, safeText(item.province, "نامشخص"))}</div>
-            <div class="card-price">${formatPrice(item.price)}</div>
+            <div class="card-title">${item.title}</div>
+            <div class="card-location">📍 ${item.location}</div>
+            <div class="card-price">${item.price}</div>
             <a href="javascript:void(0)" class="btn-reserve" onclick="reserve(${item.id})">درخواست رزرو</a>
           </div>
         </div>
       `).join("");
     }
 
-    window.filterProperties = function filterProperties() {
+    function filterProperties() {
       const keyword = normalizeStr(els.searchInput.value);
       const province = (els.provinceSelect.value ?? "").toString().trim();
 
@@ -190,26 +188,23 @@
       });
 
       renderList(filtered);
-    };
+    }
 
-    window.resetFilters = function resetFilters(){
+    function resetFilters(){
       els.searchInput.value = "";
       els.provinceSelect.value = "";
       renderList(properties);
     }
 
-    window.reserve = function reserve(id) {
+    function reserve(id) {
       const selected = properties.find(p => p.id === id);
-      const name = selected ? safeText(selected.title, "این اقامتگاه") : "این اقامتگاه";
+      const name = selected ? selected.title : "این اقامتگاه";
       alert(`درخواست رزرو برای: «${name}» ثبت شد.\nبه‌زودی با شما تماس گرفته می‌شود.`);
-    };
+    }
 
-    function fillProvinceOptions(list){
-      const existing = new Set(Array.from(els.provinceSelect.options).map(o => o.value).filter(Boolean));
-      const provinces = Array.from(new Set(list.map(x => (x.province ?? "").toString().trim()).filter(Boolean))).sort((a,b)=>a.localeCompare(b,"fa"));
-
+    function fillProvinceOptions(){
+      const provinces = Array.from(new Set(properties.map(x => x.province))).sort((a,b)=>a.localeCompare(b,"fa"));
       provinces.forEach(p => {
-        if (existing.has(p)) return;
         const opt = document.createElement("option");
         opt.value = p;
         opt.textContent = p;
@@ -217,29 +212,9 @@
       });
     }
 
-    async function loadFromSupabase(){
-      setStatus("load", "در حال دریافت اطلاعات از Supabase...");
-
-      const { data, error } = await supabase
-        .from(TABLE_NAME)
-        .select("id, title, province, location, price, image")
-        .order("id", { ascending: true });
-
-      if (error){
-        console.error(error);
-        setStatus("err", "خطا در دریافت اطلاعات (احتمالاً RLS جدول فعال است)");
-        properties = [];
-        renderList([]);
-        return;
-      }
-
-      properties = Array.isArray(data) ? data : [];
-      fillProvinceOptions(properties);
-      setStatus("ok", "اتصال به دیتابیس برقرار است");
-      renderList(properties);
-    }
-
-    loadFromSupabase();
+    // راه‌اندازی اولیه
+    fillProvinceOptions();
+    renderList(properties);
   </script>
 </body>
 </html>
