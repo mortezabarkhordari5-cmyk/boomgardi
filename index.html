@@ -14,7 +14,6 @@
     * { font-family: 'Vazirmatn', sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
     body { background-color: #f1f5f9; color: #1e293b; direction: rtl; line-height: 1.7; }
     
-    /* هدر زیبا و گرادیانت */
     header { 
       background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); 
       color: white; 
@@ -43,7 +42,6 @@
 
     .container { max-width: 850px; margin: 0 auto 40px auto; padding: 0 15px; }
 
-    /* کارت‌های مدرن */
     .card { 
       background: white; 
       border-radius: 16px; 
@@ -59,27 +57,24 @@
     .form-control { width: 100%; padding: 12px 15px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 0.95rem; transition: all 0.2s; background: #fafafa; }
     .form-control:focus { outline: none; border-color: #0f766e; background: #fff; box-shadow: 0 0 0 4px rgba(15,118,110,0.1); }
 
-    /* دکمه‌های جذاب */
     .btn { display: inline-block; width: 100%; padding: 14px; background: linear-gradient(135deg, #0f766e 0%, #115e59 100%); color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.2s; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25); }
     .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 15px rgba(15, 118, 110, 0.35); }
     .btn-danger { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25); }
-    .btn-danger:hover { box-shadow: 0 6px 15px rgba(220, 38, 38, 0.35); }
     .btn-secondary { background: #64748b; margin-top: 10px; box-shadow: none; }
     .btn-success { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); }
-    .btn-success:hover { box-shadow: 0 6px 15px rgba(22, 163, 74, 0.35); }
 
-    /* اقامتگاه‌ها */
-    .listing-item { border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; margin-bottom: 22px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s; }
-    .listing-item:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+    .listing-item { border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden; margin-bottom: 22px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
     .listing-img-box { position: relative; width: 100%; height: 220px; background: #e2e8f0; }
     .listing-img { width: 100%; height: 100%; object-fit: cover; }
-    .price-tag { position: absolute; bottom: 12px; left: 12px; background: rgba(15, 118, 110, 0.9); color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; backdrop-filter: blur(4px); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .price-tag { position: absolute; bottom: 12px; left: 12px; background: rgba(15, 118, 110, 0.92); color: white; padding: 6px 14px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; backdrop-filter: blur(4px); }
     
     .listing-content { padding: 18px; }
     .listing-item h3 { color: #0f766e; font-size: 1.2rem; margin-bottom: 6px; font-weight: 700; }
     .listing-item p { font-size: 0.9rem; color: #64748b; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 
-    /* مودال */
+    .review-box { background: #f8fafc; border-top: 1px solid #f1f5f9; padding: 12px 18px; font-size: 0.85rem; color: #475569; }
+    .review-item { margin-top: 6px; border-right: 2px solid #0f766e; padding-right: 8px; }
+
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
     .modal-content { background: white; padding: 30px; border-radius: 18px; width: 100%; max-width: 480px; text-align: right; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
     .modal-content h3 { color: #0f766e; margin-bottom: 18px; text-align: center; font-size: 1.3rem; }
@@ -104,18 +99,16 @@
 
   <div class="container">
 
-    <!-- نوار مدیریت -->
     <div class="admin-bar">
-      <i class="fa-solid fa-shield-halved"></i> مدیر محترم پلتفرم: آقای برخورداری (تلفن پشتیبانی: 09371880982)
+      <i class="fa-solid fa-shield-halved"></i> مدیریت سامانه: آقای برخورداری | پشتیبانی: 09371880982
     </div>
 
     <!-- بخش جستجو و لیست اقامتگاه‌ها -->
     <div class="card">
-      <h2><i class="fa-solid fa-mountain-sun"></i> اقامتگاه‌های فعال</h2>
+      <h2><i class="fa-solid fa-mountain-sun"></i> اقامتگاه‌های برتر و تایید شده</h2>
       
-      <!-- فیلتر جستجو -->
       <div class="form-group" style="margin-bottom: 22px;">
-        <input type="text" id="searchInput" class="form-control" placeholder="🔍 جستجو بر اساس نام اقامتگاه، شهر یا منطقه (مثلاً: الموت، ماسال)..." oninput="renderListings()">
+        <input type="text" id="searchInput" class="form-control" placeholder="🔍 جستجو بر اساس شهر، منطقه یا نام اقامتگاه (مثلاً: الموت، ماسال)..." oninput="renderListings()">
       </div>
 
       <div id="listingsContainer"></div>
@@ -143,52 +136,73 @@
         </div>
         <div class="form-group">
           <label>توضیحات و امکانات</label>
-          <input type="text" id="hostDesc" class="form-control" required placeholder="مثلاً: دارای صبحانه محلی و ویلای سنتی">
+          <input type="text" id="hostDesc" class="form-control" required placeholder="مثلاً: دارای صبحانه محلی، ویو کوهستان و پارکینگ">
         </div>
-        <button type="submit" class="btn"><i class="fa-solid fa-plus-circle"></i> ثبت اقامتگاه در سایت</button>
+        <button type="submit" class="btn"><i class="fa-solid fa-plus-circle"></i> ثبت و انتشار اقامتگاه</button>
       </form>
     </div>
 
-    <!-- پنل مدیریت (حذف اقامتگاه‌ها) -->
+    <!-- پنل مدیریت -->
     <div class="card">
       <h2><i class="fa-solid fa-user-gear"></i> پنل مدیریت پلتفرم</h2>
-      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">برای حذف اقامتگاه‌های ثبت شده:</p>
+      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 12px;">مدیریت و حذف اقامتگاه‌ها:</p>
       <div id="adminListContainer"></div>
     </div>
 
   </div>
 
-  <!-- مودال کارت‌به‌کارت و ثبت فیش -->
+  <!-- مودال رزرو -->
   <div class="modal" id="bookingModal">
     <div class="modal-content">
-      <h3>کارت‌به‌کارت و قطعی کردن رزرو</h3>
+      <h3>قطعی کردن رزرو اقامتگاه</h3>
       <div id="bookingDetails"></div>
       
       <div style="background: #f8fafc; padding: 14px; border-radius: 10px; border: 1.5px dashed #cbd5e1; margin: 18px 0; text-align: center;">
-        <p style="margin: 0 0 5px 0; font-size: 13px; color: #475569;">لطفاً مبلغ را به کارت زیر واریز کنید:</p>
+        <p style="margin: 0 0 5px 0; font-size: 13px; color: #475569;">مبلغ را به کارت زیر واریز فرمایید:</p>
         <p style="font-family: monospace; font-size: 18px; font-weight: bold; color: #0f766e; margin: 5px 0;">۶۰۳۷-۹۹۷۴-XXXX-XXXX</p>
         <p style="margin: 0; font-size: 13px; color: #334155;">به نام: <strong>مرتضی برخورداری</strong></p>
       </div>
 
       <div class="form-group">
-        <label>شماره پیگیری تراکنش یا نام واریزکننده</label>
-        <input type="text" id="trackingCodeInput" class="form-control" placeholder="مثلاً: 123456 یا احمد رضایی">
+        <label>شماره پیگیری واریز یا نام پرداخت‌کننده</label>
+        <input type="text" id="trackingCodeInput" class="form-control" placeholder="مثلاً: 845210 یا رضا مرادی">
       </div>
 
       <div class="form-group">
-        <label>شماره موبایل شما (جهت پیگیری)</label>
+        <label>شماره موبایل جهت هماهنگی کلید</label>
         <input type="tel" id="userPhoneInput" class="form-control" placeholder="مثلاً: 09123456789">
       </div>
 
-      <button class="btn btn-success" id="payBtn"><i class="fa-solid fa-check-circle"></i> ثبت فیش و ارسال اطلاعات به مدیر</button>
+      <button class="btn btn-success" id="payBtn"><i class="fa-solid fa-check-circle"></i> ثبت فیش و ارسال به مدیریت</button>
       <button class="btn btn-secondary" onclick="closeModal()">انصراف</button>
     </div>
   </div>
 
   <script>
     let defaultListings = [
-      { id: 1, title: 'اقامتگاه سنتی عمو رحمان', location: 'الموت - قزوین', price: 950000, image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', desc: 'دارای بافت سنتی، چشم‌انداز عالی و صبحانه محلی' },
-      { id: 2, title: 'کلبه جنگلی کوهستان', location: 'ماسال - گیلان', price: 1400000, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80', desc: 'محیطی دنج و آرام میان درختان سرسبز' }
+      { 
+        id: 1, 
+        title: 'اقامتگاه سنتی عمو رحمان', 
+        location: 'الموت - قزوین', 
+        price: 950000, 
+        image: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80', 
+        desc: 'دارای بافت سنتی، چشم‌انداز عالی و صبحانه محلی',
+        reviews: [
+          { name: 'سارا احمدی', text: 'بسیار تمیز بود و برخورد میزبان عالی بود.' },
+          { name: 'مجید رضایی', text: 'ویوی فوق‌العاده‌ای داشت، حتماً پیشنهاد می‌کنم.' }
+        ]
+      },
+      { 
+        id: 2, 
+        title: 'کلبه جنگلی کوهستان', 
+        location: 'ماسال - گیلان', 
+        price: 1400000, 
+        image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80', 
+        desc: 'محیطی دنج و آرام میان درختان سرسبز جنگلی',
+        reviews: [
+          { name: 'علی کریمی', text: 'تجربه بی‌نظیری از سکوت و طبیعت جنگل بود.' }
+        ]
+      }
     ];
 
     function getListings() {
@@ -219,6 +233,15 @@
 
       let html = '';
       filteredListings.forEach(item => {
+        let reviewsHtml = '';
+        if (item.reviews && item.reviews.length > 0) {
+          item.reviews.forEach(r => {
+            reviewsHtml += `<div class="review-item"><strong>${r.name}:</strong> ${r.text}</div>`;
+          });
+        } else {
+          reviewsHtml = '<div class="review-item" style="color:#94a3b8;">هنوز نظری ثبت نشده است.</div>';
+        }
+
         html += `
           <div class="listing-item">
             <div class="listing-img-box">
@@ -228,8 +251,16 @@
             <div class="listing-content">
               <h3>${item.title}</h3>
               <p><i class="fa-solid fa-location-dot" style="color:#0f766e;"></i> منطقه: ${item.location}</p>
-              <p><i class="fa-solid fa-circle-info" style="color:#0f766e;"></i> توضیحات: ${item.desc}</p>
-              <button class="btn" style="margin-top: 12px;" onclick="openBooking('${item.title}', ${item.price})"><i class="fa-solid fa-calendar-check"></i> رزرو آنلاین و پرداخت</button>
+              <p><i class="fa-solid fa-circle-info" style="color:#0f766e;"></i> امکانات: ${item.desc}</p>
+              <button class="btn" style="margin-top: 12px;" onclick="openBooking('${item.title}', ${item.price})"><i class="fa-solid fa-calendar-check"></i> درخواست رزرو و پرداخت</button>
+            </div>
+            <div class="review-box">
+              <div style="font-weight:700; color:#334155; margin-bottom:4px;"><i class="fa-solid fa-comments"></i> نظرات مسافران قبلی:</div>
+              ${reviewsHtml}
+              <div style="margin-top: 8px;">
+                <input type="text" id="revInput_${item.id}" placeholder="ثبت نظر شما..." class="form-control" style="font-size:0.85rem; padding:6px 10px; display:inline-block; width:72%; margin-left:2%;">
+                <button onclick="addReview(${item.id})" class="btn" style="width:25%; padding:7px; font-size:0.85rem; display:inline-block;">ثبت نظر</button>
+              </div>
             </div>
           </div>
         `;
@@ -237,12 +268,30 @@
       container.innerHTML = html;
     }
 
+    function addReview(id) {
+      let input = document.getElementById(`revInput_${id}`);
+      let text = input.value.trim();
+      if (!text) {
+        alert('لطفاً متن نظر خود را وارد کنید.');
+        return;
+      }
+      let listings = getListings();
+      let item = listings.find(l => l.id === id);
+      if (item) {
+        if (!item.reviews) item.reviews = [];
+        item.reviews.push({ name: 'مسافر سایت', text: text });
+        saveListings(listings);
+        input.value = '';
+        alert('نظر شما با موفقیت ثبت شد.');
+      }
+    }
+
     function renderAdminList() {
       let listings = getListings();
       let container = document.getElementById('adminListContainer');
       
       if (listings.length === 0) {
-        container.innerHTML = '<p style="font-size: 0.9rem; color:#64748b;">موردی برای مدیریت وجود ندارد.</p>';
+        container.innerHTML = '<p style="font-size: 0.9rem; color:#64748b;">موردی وجود ندارد.</p>';
         return;
       }
 
@@ -274,21 +323,18 @@
       if (imageFile) {
         let reader = new FileReader();
         reader.onload = function(event) {
-          let imageUrl = event.target.result;
-          
           let listings = getListings();
-          let newItem = {
+          listings.push({
             id: Date.now(),
             title: title,
             location: location,
             price: Number(price),
-            image: imageUrl,
-            desc: desc
-          };
-
-          listings.push(newItem);
+            image: event.target.result,
+            desc: desc,
+            reviews: []
+          });
           saveListings(listings);
-          alert('✅ اقامتگاه شما با تصویر مربوطه با موفقیت ثبت شد!');
+          alert('✅ اقامتگاه شما با موفقیت ثبت و تایید شد!');
           document.getElementById('hostForm').reset();
         };
         reader.readAsDataURL(imageFile);
@@ -326,7 +372,8 @@
         return;
       }
 
-      alert('✅ اطلاعات رزرو و فیش شما با موفقیت ثبت شد!\nآقای برخورداری پس از بررسی حساب، با شماره شما تماس گرفته و رزرو را قطعی خواهد کرد.');
+      let trackingCode = 'IRJ-' + Math.floor(100000 + Math.random() * 900000);
+      alert(`✅ رزرو شما ثبت موقت شد!\n\nکد پیگیری شما: ${trackingCode}\nآقای برخورداری پس از بررسی حساب، با شماره ${phone} تماس خواهد گرفت.`);
       closeModal();
     });
 
